@@ -1,0 +1,25 @@
+# Logs and caches
+application/logs/
+application/cache/
+
+# Environment-specific configuration
+.env
+
+# Vendor folder (if you regenerate dependencies)
+vendor/
+
+# Uploads (user-uploaded files)
+uploads/
+
+# IDE and editor-specific files
+*.sublime-project
+*.sublime-workspace
+*.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Git-related files
+*.lock
