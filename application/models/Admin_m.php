@@ -6149,4 +6149,12 @@ class Admin_m extends CI_Model
         $this->db->insert('multilingual_content', $data);
         return $this->db->insert_id();
     }
+
+     //preferred language for admin
+
+    // public function preferred_language($user_id, $language)
+    // {
+    //     $this->db->where('id', $user_id)
+    //         ->update('users', ['pref_lang' => $language]);
+    // }
 }

@@ -82,16 +82,16 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="interfaceHeading">
-					<h2 class="interfaceHeading mt-5 mb-5">Features of OrientFood</h2>
+					<h2 class="interfaceHeading mt-5 mb-5"><?= !empty(lang('features_orient_food')) ? lang('features_orient_food') : "Features of OrientFood" ?></h2>
 				</div>
 				<div class="d-flex justify-content-center featureSectionDiv">
 					<div class="interfaceImg">
 						<img id="interfaceImage" src="<?= base_url('uploads/site_banners/app_layout.png') ?>" alt="interface image">
 					</div>
 					<div class="interfaceBtn d-flex flex-column">
-						<button class="btn btnTabs" data-image="uploads/site_banners/app_layout.png">Our App</button>
-						<button class="btn btnTabs" data-image="uploads/site_banners/driver_app.png">Driver App</button>
-						<button class="btn btnTabs" data-image="uploads/site_banners/store_app.png">Store App</button>
+						<button class="btn btnTabs" data-image="uploads/site_banners/app_layout.png"><?= !empty(lang('our_app')) ? lang('our_app') : "Our App" ?></button>
+						<button class="btn btnTabs" data-image="uploads/site_banners/driver_app.png"><?= !empty(lang('driver_app')) ? lang('driver_app') : "Driver App" ?></button>
+						<button class="btn btnTabs" data-image="uploads/site_banners/store_app.png"><?= !empty(lang('store_app')) ? lang('store_app') : "Store App"?></button>
 					</div>
 				</div>
 			</div>

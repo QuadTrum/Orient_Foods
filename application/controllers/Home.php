@@ -386,6 +386,10 @@ class Home extends MY_Controller
 	public function lang_switch($lang)
 	{
 		$this->session->set_userdata('site_lang', $lang);
+		// If the user is logged in, update the preferred language in the database
+		// if ($this->session->has_userdata('id')) {
+		// 	$this->admin_m->preferred_language($this->session->userdata('id'), $lang);
+		// }
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
@@ -488,5 +492,6 @@ class Home extends MY_Controller
 			}
 		}
 	}
+	
 	
 }
