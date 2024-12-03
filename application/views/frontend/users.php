@@ -1,5 +1,4 @@
 <div class="users_section homeSection mt-150">
-
 	<div class="container">
 		<form action="<?= base_url('home/users'); ?>" method="get" class="searchForm">
 			<div class="formAreasearch">

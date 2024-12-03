@@ -367,7 +367,15 @@ class Home extends MY_Controller
 		$data['page_title'] = "FAQ";
 		$data['page'] = "Home";
 		$data['data'] = false;
-		$data['faq'] = $this->admin_m->select('faq');
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['faq'] = $this->admin_m->get_faq_with_language();
+		$faq_grouped_by_language = [];
+		foreach ($data['faq'] as $row) {
+			$faq_grouped_by_language[$row['language_id']]['name'] = $row['language_name']; // Store language name
+			$faq_grouped_by_language[$row['language_id']]['faqs'][] = $row; // Group FAQs by language
+		}
+		$data['faq_grouped_by_language'] = $faq_grouped_by_language;
+		// var_dump($data['faq_grouped_by_language']).die();
 		$data['main_content'] = $this->load->view('backend/admin_activities/faq', $data, TRUE);
 		$this->load->view('backend/index', $data);
 	}
@@ -378,7 +386,14 @@ class Home extends MY_Controller
 		$data['page_title'] = "FAQ";
 		$data['page'] = "Home";
 		$data['data'] = $this->admin_m->single_select_by_id($id, 'faq');
-		$data['faq'] = $this->admin_m->select('faq');
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['faq'] = $this->admin_m->get_faq_with_language();
+		$faq_grouped_by_language = [];
+		foreach ($data['faq'] as $row) {
+			$faq_grouped_by_language[$row['language_id']]['name'] = $row['language_name']; // Store language name
+			$faq_grouped_by_language[$row['language_id']]['faqs'][] = $row; // Group FAQs by language
+		}
+		$data['faq_grouped_by_language'] = $faq_grouped_by_language;
 		$data['main_content'] = $this->load->view('backend/admin_activities/faq', $data, TRUE);
 		$this->load->view('backend/index', $data);
 	}
@@ -389,24 +404,56 @@ class Home extends MY_Controller
 	public function add_faq()
 	{
 		is_test();
-		$this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('details', 'Details', 'required|trim|xss_clean');
+
+		// Fetch available languages
+		$languages = $this->admin_m->select('languages');  // Assuming you have a method to fetch available languages
+		$default_lang_slug = $this->input->post('default_language', TRUE);
+		if (empty($default_lang_slug)) {
+			$default_lang_slug = 'english';
+		}
+
+		foreach ($languages as $lang) {
+			// Make the default language required, others optional
+			$rules = ($lang['slug'] === $default_lang) ? 'trim|required|xss_clean' : 'trim|xss_clean';
+			$this->form_validation->set_rules('title[' . $lang['slug'] . ']', 'Title (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('details[' . $lang['slug'] . ']', 'Details (' . $lang['lang_name'] . ')', $rules);
+		}
+
+		// Check if form validation is successful
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
 			redirect(base_url('admin/home/faq'));
 		} else {
-			$data = array(
-				'title' => $this->input->post('title', TRUE),
-				'details' => $this->input->post('details', TRUE),
-				'created_at' => d_time(),
-			);
-			$id = $this->input->post('id');
-			if ($id == 0) {
-				$insert = $this->admin_m->insert($data, 'faq');
-			} else {
-				$insert = $this->admin_m->update($data, $id, 'faq');
-			}
 
+			// Get the form data for all languages
+			$title = $this->input->post('title', TRUE);
+			$details = $this->input->post('details', TRUE);
+
+			$id = $this->input->post('id');  // Get the id for updating
+			$insert = false;
+
+			foreach ($languages as $lang) {
+				// Skip empty fields for non-default languages
+				if ($lang['slug'] !== $default_lang && empty($title[$lang['slug']]) && empty($details[$lang['slug']])) {
+					continue;
+				}
+				$data = array(
+					'title' => isset($title[$lang['slug']]) ? $title[$lang['slug']] : '',
+					'details' => isset($details[$lang['slug']]) ? $details[$lang['slug']] : '',
+					'language_id' => $lang['id'],
+					'created_at' => d_time(),
+				);
+				// Insert data for new entry or update existing entry
+				if ($id == 0) {
+					$insert = $this->admin_m->insert($data, 'faq');
+				} else {
+					// Update logic for specific language
+					$this->db->where('id', $id); // Assuming you have a unique faq_id
+					$this->db->where('language_id', $lang['id']);
+					$insert = $this->db->update('faq', $data);
+				}
+			}
+			// Check insert or update result and redirect
 			if ($insert) {
 				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
 				redirect(base_url('admin/home/faq'));
@@ -416,6 +463,7 @@ class Home extends MY_Controller
 			}
 		}
 	}
+
 
 
 	/**

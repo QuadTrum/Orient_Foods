@@ -1,7 +1,6 @@
 <?php if (is_feature($id, 'welcome') == 1 && is_active($id, 'welcome')) : ?>
   <section class="sectionDefault style_2 pb-0 theme_1">
     <?php include "include/home_banner.php"; ?>
-
     <section class="Searcharea">
       <div class="container restaurant-container">
         <div class="searchSection welcomeSearch">

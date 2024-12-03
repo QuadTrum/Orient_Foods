@@ -126,7 +126,7 @@
 
  <?php if (is_access('home-control') == 1) : ?>
      <li class="nav-drawer-header"><?= lang('site_management'); ?></li>
-     <li class="treeview <?= isset($page) && $page == "Home" ? "active" : ""; ?>">
+     <li class="treeview <?= isset($page) && $page == "Home" || $page_title == "Manual Reviews" ? "active" : ""; ?>">
          <a href="#">
              <i class="fa fa-home"></i>
              <span><?= !empty(lang('home')) ? lang('home') : "Home"; ?></span>
@@ -185,6 +185,13 @@
              <li class="<?= $page_title == "Country" ? "active" : ""; ?>">
                  <a href="<?= base_url('admin/home/cities') ?>">
                      <i class="fa fa-angle-double-right"></i> <?= lang('cities'); ?> <span><?= is_new('3.1.9'); ?></span>
+                 </a>
+             </li>
+
+             <li class="<?= isset($page_title) && $page_title == "Manual Reviews" ? "active" : ""; ?>">
+                 <a href="<?= base_url('admin/dashboard/manual_reviews') ?>">
+                     <i class="fa fa-star-o"></i>
+                     <span><?= !empty(lang('manual_reviews')) ? lang('manual_reviews') : "Manual Reviews"; ?></span>
                  </a>
              </li>
 
@@ -351,7 +358,6 @@
          </a>
      </li>
  <?php endif; ?>
-
 
  <li class="treeview <?= isset($page) && $page == "Payments" ? "active" : ""; ?>">
      <a href="#">

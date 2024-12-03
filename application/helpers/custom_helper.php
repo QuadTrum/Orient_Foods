@@ -2991,8 +2991,6 @@ if (!function_exists('url')) {
                 $slug = $my_url;
             };
         endif;
-
-
         if ($ci->db->table_exists('custom_domain_list')) :
             $info = $ci->common_m->get_domain_info($slug);
         else :

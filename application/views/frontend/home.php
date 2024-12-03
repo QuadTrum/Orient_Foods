@@ -14,7 +14,7 @@
   		display: none;
   	}
 
-  
+
   	@keyframes spin {
   		0% {
   			transform: rotate(0deg);
@@ -29,6 +29,9 @@
   	<?php $settings = settings(); ?>
   	<?php $social = isJson($settings['social_sites']) ? json_decode($settings['social_sites'], TRUE) : ''; ?>
   	<?php $home = section_name('home'); ?>
+  	<?php $about_us_first = section_name('about_us_first'); ?>
+  	<?php $about_us_second = section_name('about_us_second'); ?>
+  	<?php $about_us_third = section_name('about_us_third'); ?>
   	<?php if ($home['status'] == 1) : ?>
 
   		<div class="homeTopBanner">
@@ -36,7 +39,7 @@
   				<div class="row mt-3">
   					<div class="col-7 mt-5 topSectionImg">
   						<div class="homeLeftImg">
-  							<img src="<?= base_url('uploads/site_banners/flyerImage.png')  ?>" alt="home banner">
+  							<img src="<?= !empty($home['images']) ? base_url($home['images']) : ""; ?>" alt="home banner">
   						</div>
   					</div>
   					<div class="col-5 mt-5 topSectionText">
@@ -52,15 +55,15 @@
   									<input type="text" class="form-control inputFields" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="<?= !empty(lang('restaurant_name')) ? lang('restaurant_name') : "Name"; ?>" name="restaurant_name">
   								</div>
   								<div class="form-group">
-  									<input type="email" class="form-control inputFields" id="email" name="email" placeholder="<?= !empty(lang('email')) ? lang('email'):"email";?>">
-  									<small id="emailHelp" class="form-text text-muted"><?= !empty(lang('emailconsent')) ? lang('emailconsent') : "We'll never share your email with anyone else."?></small>
+  									<input type="email" class="form-control inputFields" id="email" name="email" placeholder="<?= !empty(lang('email')) ? lang('email') : "email"; ?>">
+  									<small id="emailHelp" class="form-text text-muted"><?= !empty(lang('emailconsent')) ? lang('emailconsent') : "We'll never share your email with anyone else." ?></small>
   								</div>
   								<div class="form-group">
   									<input type="tel" class="form-control inputFields" id="phoneNumber" name="phone" placeholder="121-3434-45">
   								</div>
   								<div class="actionBtn mt-1">
   									<button type="submit" class="btn btnFirst">
-  									<?= !empty(lang('join_now')) ? lang('join_now') :"join now" ?>
+  										<?= !empty(lang('join_now')) ? lang('join_now') : "join now" ?>
   									</button>
   									<!-- <a class="btn btnFirst" href="#">Join now</a> -->
   								</div>
@@ -91,72 +94,72 @@
   			<div class="container mt-2">
   				<div class="row">
   					<div class="col-12 mt-2 ">
-  						<h1 class="moduleHeading "> <?= !empty(lang('module_heading')) ? lang('module_heading') : "Modules to Automate your Restaurant!"?></h1>
+  						<h1 class="moduleHeading "> <?= !empty(lang('module_heading')) ? lang('module_heading') : "Modules to Automate your Restaurant!" ?></h1>
   						<ul class="d-flex moduleMain mt-5">
   							<div class="modulePart firstDiv">
   								<li class="d-flex">
   									<i class="icofont-dice-multiple"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item1')) ? lang('module_item1') : "Multiple Branches Options"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item1')) ? lang('module_item1') : "Multiple Branches Options" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-credit-card"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item2')) ? lang('module_item2') : "Easy Payment System"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item2')) ? lang('module_item2') : "Easy Payment System" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-globe"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item3')) ? lang('module_item3') : "Multi Language supported "?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item3')) ? lang('module_item3') : "Multi Language supported " ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-page"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item4')) ? lang('module_item4') : "Unlimited Page Builder"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item4')) ? lang('module_item4') : "Unlimited Page Builder" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-chart-bar-graph"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item5')) ? lang('module_item5') : "Cookies and Social Analytics"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item5')) ? lang('module_item5') : "Cookies and Social Analytics" ?></p>
   								</li>
   							</div>
   							<div class="modulePart">
   								<li class="d-flex">
   									<i class="icofont-dashboard-web"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item6')) ? lang('module_item6') : "Powerful Admin Panel "?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item6')) ? lang('module_item6') : "Powerful Admin Panel " ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-gift"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item7')) ? lang('module_item7') : "Coupon & Voucher Functionality"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item7')) ? lang('module_item7') : "Coupon & Voucher Functionality" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-penalty-card"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item8')) ? lang('module_item8') : "Multiple Payment Gateway"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item8')) ? lang('module_item8') : "Multiple Payment Gateway" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-dashboard-web"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item9')) ? lang('module_item9') : "Restaurant Point of Sale"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item9')) ? lang('module_item9') : "Restaurant Point of Sale" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-ui-messaging"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item10')) ? lang('module_item10') : "Push Notification"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item10')) ? lang('module_item10') : "Push Notification" ?></p>
   								</li>
   							</div>
   							<div class="modulePart">
   								<li class="d-flex">
   									<i class="icofont-dashboard-web"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item11')) ? lang('module_item11') : "Powerful Admin Panel"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item11')) ? lang('module_item11') : "Powerful Admin Panel" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-gift"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item12')) ? lang('module_item12') : "Coupon & Voucher Functionality"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item12')) ? lang('module_item12') : "Coupon & Voucher Functionality" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-penalty-card"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item13')) ? lang('module_item13') : "Multiple Payment Gateway"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item13')) ? lang('module_item13') : "Multiple Payment Gateway" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-dashboard-web"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item14')) ? lang('module_item14') : "Restaurant Point of Sale"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item14')) ? lang('module_item14') : "Restaurant Point of Sale" ?></p>
   								</li>
   								<li class="d-flex">
   									<i class="icofont-ui-messaging"></i>
-  									<p class="moduleName"><?= !empty(lang('module_item15')) ? lang('module_item15') : "Push Notification"?></p>
+  									<p class="moduleName"><?= !empty(lang('module_item15')) ? lang('module_item15') : "Push Notification" ?></p>
   								</li>
   							</div>
   						</ul>
@@ -172,16 +175,16 @@
   				<div class="row mt-3 gap-2 ">
   					<div class="col-7 topSectionImg">
   						<div class="bannerImages">
-  							<img src="<?= base_url('uploads/site_banners/frame.png'); ?>" alt="section banner">
+  							<img src="<?= !empty($about_us_first['images']) ? base_url($about_us_first['images']) : ""; ?>" alt="section banner">
   						</div>
   					</div>
 
   					<div class="col-5 topSectionText">
   						<div class="introSection">
-  							<h1 class="introTitle"><?= !empty(lang('sub_banner_heading')) ? lang('sub_banner_heading'):"launch your Restaurant with us !"?></h1>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining."?></p>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining."?></p>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining."?></p>
+  							<h1 class="introTitle"><?= !empty(lang('sub_banner_heading')) ? lang('sub_banner_heading') : "launch your Restaurant with us !" ?></h1>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining." ?></p>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining." ?></p>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('sub_banner_subheading_1')) ? lang('sub_banner_subheading_1') : "Efficient and Easy Digital Menu Ordering and Contactless Payment System for In-House Dining." ?></p>
   						</div>
   					</div>
   				</div>
@@ -194,15 +197,15 @@
   				<div class="row mt-3 gap-2 " id="middleSectionAbout">
   					<div class="col-5 middleSectionText">
   						<div class="introSection2 ml-4">
-  							<h1 class="introTitle"><?= !empty(lang('middle_section_about')) ? lang('middle_section_about') : "Contactless Table Ordering System"?></h1>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('middle_section_about_headline')) ? lang('middle_section_about_headline') : "Customers can use their smartphones to scan the QR code on their table, which directs them to the digital menu."?></p>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('middle_section_about_headline2')) ? lang('middle_section_about_headline2') : "The digital menu allows customers to browse through items, select their choices, and place orders directly from their devices."?></p>
+  							<h1 class="introTitle"><?= !empty(lang('middle_section_about')) ? lang('middle_section_about') : "Contactless Table Ordering System" ?></h1>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('middle_section_about_headline')) ? lang('middle_section_about_headline') : "Customers can use their smartphones to scan the QR code on their table, which directs them to the digital menu." ?></p>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('middle_section_about_headline2')) ? lang('middle_section_about_headline2') : "The digital menu allows customers to browse through items, select their choices, and place orders directly from their devices." ?></p>
   							<p class="introSubHeadline mt-3"><?= !empty(lang('middle_section_about_headline3')) ? lang('middle_section_about_headline3') : "Orders are sent to the kitchen or bar, reducing the need for physical menus, paper order slips, and direct interaction with waitstaff." ?></p>
   						</div>
   					</div>
   					<div class="col-7 topSectionImg">
   						<div class="bannerImages">
-  							<img src="<?= base_url('uploads/site_banners/sideFrame.png'); ?>" alt="section banner">
+  							<img src="<?= !empty($about_us_second['images']) ? base_url($about_us_second['images']) : ""; ?>" alt="section banner">
   						</div>
   					</div>
   				</div>
@@ -215,15 +218,15 @@
   				<div class="row mt-3 gap-2 ">
   					<div class="col-6 topSectionImg">
   						<div class="bannerImages">
-  							<img src="<?= base_url('uploads/site_banners/pos_int.png'); ?>" alt="section banner">
+  							<img src="<?= !empty($about_us_third['images']) ? base_url($about_us_third['images']) : ""; ?>" alt="section banner">
   						</div>
   					</div>
 
   					<div class="col-6 mt-5 endSectionText">
   						<div class="introSection ml-5">
-  							<h1 class="introTitle"><?= !empty(lang('end_about_section')) ? lang('end_about_section') : "Restaurant POS Integration!"?></h1>
+  							<h1 class="introTitle"><?= !empty(lang('end_about_section')) ? lang('end_about_section') : "Restaurant POS Integration!" ?></h1>
   							<p class="introSubHeadline mt-3"><?= !empty(lang('end_about_section_heading')) ? lang('end_about_section_heading') : "Integration with the restaurant's POS system ensures that orders placed through the contactless system are seamlessly processed." ?></p>
-  							<p class="introSubHeadline mt-3"><?= !empty(lang('end_about_section_heading2')) ? lang('end_about_section_heading2') : "The POS system may also handle payment processing, allowing customers to pay through the app or other contactless methods."?></p>
+  							<p class="introSubHeadline mt-3"><?= !empty(lang('end_about_section_heading2')) ? lang('end_about_section_heading2') : "The POS system may also handle payment processing, allowing customers to pay through the app or other contactless methods." ?></p>
   						</div>
   					</div>
 

@@ -6157,4 +6157,24 @@ class Admin_m extends CI_Model
     //     $this->db->where('id', $user_id)
     //         ->update('users', ['pref_lang' => $language]);
     // }
+
+    // langauge and faq relation
+    public function get_faq_with_language()
+{
+    $this->db->select('faq.*, languages.lang_name as language_name');
+    $this->db->from('faq');
+    $this->db->join('languages', 'faq.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
+    $query = $this->db->get();
+    return $query->result_array();
+}
+
+public function get_manual_reviews()
+{
+    $this->db->select('manual_reviews.*, languages.lang_name as language_name');
+    $this->db->from('manual_reviews');
+    $this->db->join('languages', 'manual_reviews.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
+    $query = $this->db->get();
+    return $query->result_array();
+}
+
 }

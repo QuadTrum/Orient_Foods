@@ -1644,12 +1644,170 @@ class Dashboard extends MY_Controller
 		$data['page_title'] = "Shop Reviews";
 		$data['page'] = "Shop Reviews";
 		$data['data'] = FALSE;
+		$data['languages'] = $this->admin_m->select('languages');
 		$data['review_list'] = $this->admin_m->get_shop_reviews();
 		$data['settings'] = settings();
 		$data['main_content'] = $this->load->view('backend/admin_activities/shop_reviews', $data, TRUE);
 		$this->load->view('backend/index', $data);
 	}
 
+	public function manual_reviews()
+	{
+		$data = array();
+		$data['page_title'] = "Manual Reviews";
+		$data['page'] = "Manual Reviews";
+		$data['data'] = FALSE;
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['manual_reviews'] = $this->admin_m->get_manual_reviews();
+		$data['settings'] = settings();
+		$reviews_grouped_by_language = [];
+		foreach ($data['manual_reviews'] as $row) {
+			$reviews_grouped_by_language[$row['language_id']]['name'] = $row['language_name']; // Store language name
+			$reviews_grouped_by_language[$row['language_id']]['reviews'][] = $row; // Group FAQs by language
+		}
+		$data['reviews_grouped_by_language'] = $reviews_grouped_by_language;
+		$data['main_content'] = $this->load->view('backend/admin_activities/manual_reviews', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
+
+	// add reviews
+	public function add_reviews()
+	{
+		is_test();
+
+		// Fetch available languages
+		$languages = $this->admin_m->select('languages');  // Assuming you have a method to fetch available languages
+		$default_lang_slug = $this->input->post('default_language', TRUE);
+		if (empty($default_lang_slug)) {
+			$default_lang_slug = 'english';
+		}
+
+		foreach ($languages as $lang) {
+			// Make the default language required, others optional
+			$rules = ($lang['slug'] === $default_lang) ? 'trim|required|xss_clean' : 'trim|xss_clean';
+			$this->form_validation->set_rules('customer_name[' . $lang['slug'] . ']', 'Customer_Name (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('restaurant_name[' . $lang['slug'] . ']', 'Restaurant_Name (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('rating[' . $lang['slug'] . ']', 'Rating (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('reviews[' . $lang['slug'] . ']', 'Reviews (' . $lang['lang_name'] . ')', $rules);
+		}
+
+		// Check if form validation is successful
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('error', validation_errors());
+			redirect(base_url('admin/dashboard/manual_reviews'));
+		} else {
+			// Handle File Upload
+			$profile_image = '';
+			if (!empty($_FILES['file']['name'])) { // Check if any file is uploaded
+				$config['upload_path'] = './uploads/profile_images/';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif';
+				$config['max_size'] = 2048; // Limit to 2MB
+				$this->load->library('upload', $config);
+
+				// Loop through each file in the array
+				foreach ($_FILES['file']['name'] as $key => $file_name) {
+					if ($_FILES['file']['error'][$key] == UPLOAD_ERR_OK) { // Check for upload errors
+						$_FILES['userfile']['name'] = $file_name;
+						$_FILES['userfile']['type'] = $_FILES['file']['type'][$key];
+						$_FILES['userfile']['tmp_name'] = $_FILES['file']['tmp_name'][$key];
+						$_FILES['userfile']['error'] = $_FILES['file']['error'][$key];
+						$_FILES['userfile']['size'] = $_FILES['file']['size'][$key];
+
+						// Initialize the upload library for each file
+						$this->upload->initialize($config);
+
+						if ($this->upload->do_upload('userfile')) {
+							$file_data = $this->upload->data();
+							$profile_image = 'uploads/profile_images/' . $file_data['file_name'];
+
+							// Here you can store the image path or perform any other logic
+							echo "File uploaded successfully: " . $profile_image;
+						} else {
+							// If upload fails, display error
+							$this->session->set_flashdata('error', $this->upload->display_errors());
+							redirect(base_url('admin/dashboard/manual_reviews'));
+						}
+					}
+				}
+			} else {
+				$this->session->set_flashdata('error', $this->upload->display_errors());
+				redirect(base_url('admin/dashboard/manual_reviews'));
+			}
+
+			// Get the form data for all languages
+			$ratings = $this->input->post('rating', TRUE);
+			$reviews = $this->input->post('reviews', TRUE);
+			$customer_name = $this->input->post('customer_name', TRUE);
+			$restaurant_name = $this->input->post('restaurant_name', TRUE);
+			$id = $this->input->post('id');  // Get the id for updating
+			$insert = false;
+
+			foreach ($languages as $lang) {
+				// Skip empty fields for non-default languages
+				if ($lang['slug'] !== $default_lang && empty($rating[$lang['slug']]) && empty($reviews[$lang['slug']])  && empty($customer_name[$lang['slug']]) && empty($restaurant_name[$lang['slug']])) {
+					continue;
+				}
+				$data = array(
+					'ratings' => isset($ratings[$lang['slug']]) ? $ratings[$lang['slug']] : '',
+					'customer_name' => isset($customer_name[$lang['slug']]) ? $customer_name[$lang['slug']] : '',
+					'restaurant_name' => isset($restaurant_name[$lang['slug']]) ? $restaurant_name[$lang['slug']] : '',
+					'reviews' => isset($reviews[$lang['slug']]) ? $reviews[$lang['slug']] : '',
+					'language_id' => $lang['id'],
+					'images' => $profile_image,
+					'created_at' => d_time(),
+				);
+				// Insert data for new entry or update existing entry
+				if ($id == 0) {
+					$insert = $this->admin_m->insert($data, 'manual_reviews');
+				} else {
+					// Update logic for specific language
+					$this->db->where('id', $id); // Assuming you have a unique faq_id
+					$this->db->where('language_id', $lang['id']);
+					$insert = $this->db->update('manual_reviews', $data);
+				}
+			}
+			// Check insert or update result and redirect
+			if ($insert) {
+				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+				redirect(base_url('admin/dashboard/manual_reviews'));
+			} else {
+				$this->session->set_flashdata('error', !empty(lang('error_text')) ? lang('error_text') : 'Somethings Were Wrong!!');
+				redirect(base_url('admin/dashboard/manual_reviews'));
+			}
+		}
+	}
+	// edit reviews
+	public function edit_reviews($id)
+	{
+		$data = array();
+		$data['page_title'] = "Manual Reviews";
+		$data['page'] = "Manual Reviews";
+		$data['data'] = $this->admin_m->single_select_by_id($id, 'manual_reviews');
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['manual_reviews'] = $this->admin_m->get_manual_reviews();
+		$data['settings'] = settings();
+		$reviews_grouped_by_language = [];
+		foreach ($data['manual_reviews'] as $row) {
+			$reviews_grouped_by_language[$row['language_id']]['name'] = $row['language_name']; // Store language name
+			$reviews_grouped_by_language[$row['language_id']]['reviews'][] = $row; // Group FAQs by language
+		}
+		$data['reviews_grouped_by_language'] = $reviews_grouped_by_language;
+		$data['main_content'] = $this->load->view('backend/admin_activities/manual_reviews', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
+	// delete reviews
+	public function delete_reviews($id, $table)
+	{
+		is_test();
+		$del = $this->admin_m->delete($id, $table);
+		if ($del) {
+			$this->session->set_flashdata('success', 'Item Deleted');
+			redirect($_SERVER['HTTP_REFERER']);
+		} else {
+			$this->session->set_flashdata('error', 'Somthing worng. Error!!');
+			redirect($_SERVER['HTTP_REFERER']);
+		}
+	}
 
 
 	public function review_status($id, $status)
