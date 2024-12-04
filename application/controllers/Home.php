@@ -385,7 +385,7 @@ class Home extends MY_Controller
 
 	public function lang_switch($lang)
 	{
-		$this->session->set_userdata('site_lang', $lang);
+		$this->session->set_userdata('user', $lang);
 		// If the user is logged in, update the preferred language in the database
 		// if ($this->session->has_userdata('id')) {
 		// 	$this->admin_m->preferred_language($this->session->userdata('id'), $lang);
@@ -464,25 +464,25 @@ class Home extends MY_Controller
 	public function storeLead()
 	{
 		$this->load->library('form_validation');
-	
+
 		$this->form_validation->set_rules('restaurant_name', 'Restaurant Name', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 		$this->form_validation->set_rules('phone', 'Phone', 'required|numeric');
-	
+
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', 'Please fill in all fields correctly.');
-			redirect(base_url()); 
+			redirect(base_url());
 		} else {
 			$restaurant_name = $this->input->post('restaurant_name');
 			$email = $this->input->post('email');
 			$phone = $this->input->post('phone');
-	
+
 			$data = array(
 				'restaurant_name' => $restaurant_name,
 				'email' => $email,
 				'phone' => $phone
 			);
-	
+
 			if ($this->common_m->insertLead($data)) {
 				$this->session->set_flashdata('success', 'Your message was sent successfully!');
 				redirect(base_url());
@@ -492,6 +492,23 @@ class Home extends MY_Controller
 			}
 		}
 	}
-	
-	
+
+	public function restaurant_admin($lang)
+	{
+		// var_dump($lang).die();
+		$this->session->set_userdata('admin', $lang);
+
+		// Redirect back to the previous page
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	// language for website end
+	public function website_lang($lang)
+	{
+		// var_dump($lang).die();
+		$this->session->set_userdata('home', $lang);
+
+		// Redirect back to the previous page
+		redirect($_SERVER['HTTP_REFERER']);
+	}
 }

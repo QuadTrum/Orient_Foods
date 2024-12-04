@@ -99,20 +99,21 @@ class CI_Lang {
 		}
 
 		$langfile = str_replace('.php', '', $langfile);
+		
 
 		if ($add_suffix === TRUE)
 		{
 			$langfile = preg_replace('/_lang$/', '', $langfile).'_lang';
+			
 		}
 
 		$langfile .= '.php';
-
+		
 		if (empty($idiom) OR ! preg_match('/^[a-z_-]+$/i', $idiom))
 		{
 			$config =& get_config();
 			$idiom = empty($config['language']) ? 'english' : $config['language'];
 		}
-
 		if ($return === FALSE && isset($this->is_loaded[$langfile]) && $this->is_loaded[$langfile] === $idiom)
 		{
 			return;
