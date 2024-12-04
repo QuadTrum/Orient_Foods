@@ -3075,7 +3075,7 @@ if (!function_exists('shop_default_language')) {
         if (empty(auth('vendor_lang'))) :
             $extra =  extra_settings($id);
             $ln = !empty($extra['system_default_language']) ? $extra['system_default_language'] : $settings['language'];
-            // $ci->session->set_userdata(['site_lang' => $ln, 'vendor_lang' => $ln]);
+             $ci->session->set_userdata(['site_lang' => $ln, 'vendor_lang' => $ln]);
             header("Refresh:0");
         endif;
     }
