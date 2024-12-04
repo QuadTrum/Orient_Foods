@@ -59,7 +59,9 @@
 		background-color: gainsboro;
 	}
 </style>
-
+<?php $feature_image_app = section_name('feature_image_app'); ?>
+<?php $feature_image_driver = section_name('feature_image_driver'); ?>
+<?php $feature_image_store = section_name('feature_image_store'); ?>
 <?php $pricing = section_name('pricing'); ?>
 <?php if (!empty($pricing) && $settings['is_registration'] == 1) : ?>
 	<section class="home_pricing teamSections" id="pricing">
@@ -86,12 +88,12 @@
 				</div>
 				<div class="d-flex justify-content-center featureSectionDiv">
 					<div class="interfaceImg">
-						<img id="interfaceImage" src="<?= base_url('uploads/site_banners/app_layout.png') ?>" alt="interface image">
+						<img id="interfaceImage" src="<?= !empty($feature_image_app['images']) ? base_url($feature_image_app['images']) : ""; ?>" alt="interface image">
 					</div>
 					<div class="interfaceBtn d-flex flex-column">
-						<button class="btn btnTabs" data-image="uploads/site_banners/app_layout.png"><?= !empty(lang('our_app')) ? lang('our_app') : "Our App" ?></button>
-						<button class="btn btnTabs" data-image="uploads/site_banners/driver_app.png"><?= !empty(lang('driver_app')) ? lang('driver_app') : "Driver App" ?></button>
-						<button class="btn btnTabs" data-image="uploads/site_banners/store_app.png"><?= !empty(lang('store_app')) ? lang('store_app') : "Store App"?></button>
+						<button class="btn btnTabs" data-image="<?= !empty($feature_image_app['images']) ? $feature_image_app['images'] : ""; ?>"><?= !empty(lang('our_app')) ? lang('our_app') : "Our App" ?></button>
+						<button class="btn btnTabs" data-image="<?= !empty($feature_image_driver['images']) ? $feature_image_driver['images'] : ""; ?>"><?= !empty(lang('driver_app')) ? lang('driver_app') : "Driver App" ?></button>
+						<button class="btn btnTabs" data-image="<?= !empty($feature_image_store['images']) ? $feature_image_store['images'] : ""; ?>"><?= !empty(lang('store_app')) ? lang('store_app') : "Store App" ?></button>
 					</div>
 				</div>
 			</div>
@@ -262,7 +264,7 @@
 		<div class="row reviewsRow">
 			<!-- First Review Card -->
 			<div class="col-md-6 mb-4">
-				<div class="d-flex align-items-start review-card"style="position:relative;left:80px">
+				<div class="d-flex align-items-start review-card" style="position:relative;left:80px">
 					<img src="https://via.placeholder.com/50" alt="Reviewer Image" class="mr-3">
 					<div>
 						<div class="star-rating">
@@ -381,6 +383,7 @@
 	$(document).ready(function() {
 		$('.btnTabs').on('click', function() {
 			var imagePath = $(this).data('image');
+			console.log(imagePath);
 			$('#interfaceImage').attr('src', '<?= base_url(); ?>/' + imagePath);
 		});
 	});

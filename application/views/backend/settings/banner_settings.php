@@ -90,8 +90,14 @@
 									<?= !empty(lang('about_us_third')) ? lang('about_us_third') : "Contacts"; ?> <?= lang('section'); ?>
 								</option>
 
-								<option value="feature_images" <?= isset($data['section_name']) && $data['section_name'] == 'feature_images' ? "selected" : ""; ?>>
-									<?= !empty(lang('feature_images')) ? lang('feature_images') : "Feature_images"; ?> <?= lang('section'); ?>
+								<option value="feature_image_app" <?= isset($data['section_name']) && $data['section_name'] == 'feature_image_app' ? "selected" : ""; ?>>
+									<?= !empty(lang('feature_image_app')) ? lang('feature_image_app') : "Feature_image_app"; ?> <?= lang('section'); ?>
+								</option>
+								<option value="feature_image_driver" <?= isset($data['section_name']) && $data['section_name'] == 'feature_image_driver' ? "selected" : ""; ?>>
+									<?= !empty(lang('feature_image_driver')) ? lang('feature_image_driver') : "Feature_image_driver"; ?> <?= lang('section'); ?>
+								</option>
+								<option value="feature_image_store" <?= isset($data['section_name']) && $data['section_name'] == 'feature_image_store' ? "selected" : ""; ?>>
+									<?= !empty(lang('feature_image_store')) ? lang('feature_image_store') : "Feature_image_store"; ?> <?= lang('section'); ?>
 								</option>
 							</select>
 						</div>
@@ -106,7 +112,7 @@
 							<textarea name="sub_heading" id="" class="form-control " cols="10" rows="5"><?= !empty($data['sub_heading']) ? $data['sub_heading'] : ""; ?></textarea>
 						</div>
 
-						<div class="form-group col-md-12 hide_banner" style="display: <?= isset($data['section_name']) && ($data['section_name'] == "home" || $data['section_name'] == 'faq' || $data['section_name'] == "about_us_first" || $data['section_name'] == "about_us_second" || $data['section_name'] == "about_us_third" || $data['section_name'] == "feature_images")  ? "block" : "none";; ?>;">
+						<div class="form-group col-md-12 hide_banner" style="display: <?= isset($data['section_name']) && ($data['section_name'] == "home" || $data['section_name'] == 'faq' || $data['section_name'] == "about_us_first" || $data['section_name'] == "about_us_second" || $data['section_name'] == "about_us_third" || $data['section_name'] == "feature_image_store" || $data['section_name'] == "feature_image_app" || $data['section_name'] == "feature_image_driver")  ? "block" : "none";; ?>;">
 							<label><?= !empty(lang('banner')) ? lang('banner') : "banner"; ?></label>
 							<div class="logo" style="height: 250px; width: 100%; border-radius: 0;">
 								<img src="<?= !empty($data['images']) ? base_url($data['images']) : ''; ?>" class="service_icon_preview" alt="">

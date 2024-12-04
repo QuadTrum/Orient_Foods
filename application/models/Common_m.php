@@ -2156,4 +2156,43 @@ class Common_m extends CI_Model
 	public function insertLead($data) {
         return $this->db->insert('leads', $data);
     }
+
+	// fetch manual faqs
+	function select_manual_reviews($table)
+{
+    // Access CI instance
+    $ci =& get_instance();
+
+    // Get the session variable for 'home'
+    $languageSlug = $ci->session->userdata('home');
+
+    // If no language slug is set, default to 'english'
+    $languageSlug = $languageSlug ?? 'english';
+
+    // Fetch the language ID from the 'language' table based on the slug
+    $ci->db->select('id');
+    $ci->db->from('language');
+    $ci->db->where('slug', $languageSlug);
+    $languageQuery = $ci->db->get();
+    $languageResult = $languageQuery->row_array();
+
+    // Get the language ID or default to a fallback value
+    $languageId = $languageResult['id'] ?? null;
+
+    // If no language ID is found, handle the error (optional)
+    if (!$languageId) {
+        return []; // Return an empty array if no language matches
+    }
+
+    // Fetch FAQs filtered by the language ID
+    $this->db->select();
+    $this->db->from($table);
+    $this->db->where('language_id', $languageId); // Filter by language ID
+    $this->db->order_by('id', 'ASC');
+    $query = $this->db->get();
+
+    // Return the result
+    return $query->result_array();
+}
+
 }
