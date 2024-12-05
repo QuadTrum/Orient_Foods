@@ -44,11 +44,12 @@ class Home extends MY_Controller
 		$data['users'] = $this->common_m->get_all_users($per_page, $offset, 0);
 		$data['left_features'] = $this->common_m->get_home_features_by_type('left');
 		$data['right_features'] = $this->common_m->get_home_features_by_type('right');
-		$data['faqs'] = $this->common_m->select_with_status('faq');
+		$data['faqs'] = $this->common_m->select_manual_data('faq');
 		$data['services'] = $this->common_m->select_with_status('site_services');
 		$data['team'] = $this->common_m->select_with_status('site_team');
 		$data['packages'] = $this->common_m->select_with_status('packages');
 		$data['all_features'] = $this->common_m->select_with_status('features');
+		
 		$load_data = $this->load->view('frontend/home_content/step_2', $data, TRUE);
 		echo json_encode(['st' => 1, 'load_data' => $load_data]);
 	}
@@ -385,7 +386,7 @@ class Home extends MY_Controller
 
 	public function lang_switch($lang)
 	{
-		$this->session->set_userdata('user', $lang);
+		$this->session->set_userdata('site_lang', $lang);
 		// If the user is logged in, update the preferred language in the database
 		// if ($this->session->has_userdata('id')) {
 		// 	$this->admin_m->preferred_language($this->session->userdata('id'), $lang);

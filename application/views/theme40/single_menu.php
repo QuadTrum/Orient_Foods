@@ -21,13 +21,13 @@
                 <?php foreach ($all_items as $key => $type) : ?>
                   <?php if (count($type['items']) > 0) : ?>
                     <li style="display: inline-block !important; white-space: nowrap !important;">
-  <button id="<?= $type['category_id']; ?>" class="categoryItem" style="display: flex !important; flex-direction: column !important; align-items: center !important;">
-    <?php if (is_image($shop_id) == 0) : ?>
-      <img class="catImg" src="<?= get_img($type['thumb'], '', 1); ?>" alt="cat_img" style="width: 100px !important; margin-bottom: 10px !important;">
-    <?php endif ?>
-    <span class="categoryName" style="display: block !important;"><?= html_escape($type['name']); ?></span>
-  </button>
-</li>
+                      <button id="<?= $type['category_id']; ?>" class="categoryItem" style="display: flex !important; flex-direction: column !important; align-items: center !important;">
+                        <?php if (is_image($shop_id) == 0) : ?>
+                          <img class="catImg" src="<?= get_img($type['thumb'], '', 1); ?>" alt="cat_img" style="width: 100px !important; margin-bottom: 10px !important;">
+                        <?php endif ?>
+                        <span class="categoryName" style="display: block !important;"><?= html_escape($type['name']); ?></span>
+                      </button>
+                    </li>
 
                   <?php endif; ?>
                 <?php endforeach ?>

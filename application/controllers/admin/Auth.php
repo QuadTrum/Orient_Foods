@@ -1695,16 +1695,20 @@ class Auth extends MY_Controller
 
     public function add_layouts()
     {
-
+   
         $this->form_validation->set_rules('preloader', 'Pre-loader', 'trim|xss_clean|required');
-        $this->form_validation->set_rules('restaurant_color', 'Restaurant Color', 'trim|xss_clean|required');
+        $this->form_validation->set_rules('menu_card_color', 'Restaurant Color', 'trim|xss_clean|required');
+        $this->form_validation->set_rules('menu_items_bg', 'Restaurant Color', 'trim|xss_clean|required');
+        $this->form_validation->set_rules('site_bg_color', 'Restaurant Color', 'trim|xss_clean|required');
         $this->form_validation->set_rules('menu_style', 'Menu Style', 'trim|required');
         $this->form_validation->set_rules('theme', 'Theme', 'trim|xss_clean');
         if ($this->form_validation->run() == false) {
             $this->session->set_flashdata('error', validation_errors());
             redirect(base_url('admin/auth/layouts'));
         } else {
-            $restaurant_color = $this->input->post('restaurant_color', true);
+            $menu_card_color = $this->input->post('menu_card_color', true);
+            $menu_items_bg = $this->input->post('menu_items_bg', true);
+            $site_bg_color = $this->input->post('site_bg_color', true);
             $preloader = $this->input->post('preloader', true);
             $theme = $this->input->post('theme', true);
             $menu_style = $this->input->post('menu_style', true);
@@ -1719,19 +1723,22 @@ class Auth extends MY_Controller
             $home_page_style = $this->input->post('home_page_style', true);
 
             $userSettings = array(
-                'restaurant_color' => isset($restaurant_color) ? $restaurant_color :'#f16722',
+                'menu_card_color' => isset($menu_card_color) ? $menu_card_color :'#EEEEF2',
+                'menu_items_bg' => isset($menu_items_bg) ? $menu_items_bg :'#EEEEF2',
+                'site_bg_color' => isset($site_bg_color) ? $site_bg_color :'#EEEEF2',
                 'preloader' => isset($preloader) ? $preloader : 0,
                 'site_theme' => isset($site_theme) ? $site_theme : 1,
                 'is_banner' => isset($is_banner) ? $is_banner : 0,
                 'is_footer' => isset($is_footer) ? $is_footer : 0,
             );
-
             $user = [
+                'menu_card_color' => isset($menu_card_color) ? $menu_card_color :'#EEEEF2',
+                'site_bg_color' => isset($site_bg_color) ? $site_bg_color :'#EEEEF2',
+                'menu_items_bg' => isset($menu_items_bg) ? $menu_items_bg :'#EEEEF2',
                 'theme' => isset($theme) ? $theme : 0,
                 'menu_style' => isset($menu_style) ? $menu_style : 0,
                 'home_page_style' => isset($home_page_style) ? $home_page_style : 1,
             ];
-
 
             if ($setting_id == 0) {
                 $insert = $this->admin_m->insert($userSettings, 'user_settings');

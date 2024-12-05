@@ -122,7 +122,14 @@
     <?php if (isset($id)) : ?>
         <?php $u_info = user_info_by_id($id); ?>
 
-
+        <style>
+            .homeItemDetails {
+                background-color: <?= isset($u_info['menu_card_color']) ? $u_info['menu_card_color'] : '#4b566b'; ?> !important;
+            }
+            .item_images{
+                background-color: <?= isset($u_info['menu_items_bg']) ? $u_info['menu_items_bg'] : ''; ?> !important;
+            }
+        </style>
         <?php if (isset($u_info['menu_style']) && $u_info['menu_style'] == 3) : ?>
             <style>
                 @media only screen and (max-width: 767px) {
@@ -283,7 +290,7 @@
 
 
 
-    <body class="<?= isset($u_info['theme_color']) && $u_info['theme_color'] == 1 ? "dark" : (isset($u_info['theme_color']) && $u_info['theme_color'] == 0 ? "light" : 'gradient gradient_' . $u_info['theme_color']); ?>">
+    <body style="Background-color:<?= isset($u_info['site_bg_color']) ? $u_info['site_bg_color'] : ''; ?> !important;">
 
         <?php if (isset($user_settings['preloader']) && $user_settings['preloader'] != 0) : ?>
             <div id="preloader">

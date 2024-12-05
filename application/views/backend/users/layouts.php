@@ -151,15 +151,28 @@
                         <!-- restaurant color -->
                         <div class="singleDiv">
                             <div class="divHeader">
-                            <h4><?= lang('site color') ? lang('site color') : ' site Color'; ?></h4>
+                            <h4><?= lang('Menu Setting') ? lang('Menu Setting') : ' Menu Setting'; ?></h4>
                             </div>
                             <div class="singleDivDetails">
                                 <div class="row">
                                     <div class="">
                                             <div class="col-sm-4">
                                                 <div class="form-group">
-                                                <label for="site_color" class="color-picker-label">Select Site Color:</label>
-                                                <input type="color" id="site_color" name="restaurant_color" class="color-picker-input" value="<?= isset($settings['restaurant_color']) ? $settings['restaurant_color'] : '#f16722' ?>">
+                                                <label for="site_color" class="color-picker-label">Menu Card Color:</label>
+                                                <input type="color" id="site_color" name="menu_card_color" class="color-picker-input" value="<?= isset($settings['menu_card_color']) ? $settings['menu_card_color'] : '#EEEEF2' ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                <label for="site_color" class="color-picker-label">Menu Items Background:</label>
+                                                <input type="color" id="site_color" name="menu_items_bg" class="color-picker-input" value="<?= isset($settings['menu_items_bg']) ? $settings['menu_items_bg'] : '#EEEEF2' ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                <label for="site_color" class="color-picker-label">Restaurant Background Color:</label>
+                                                <input type="color" id="site_color" name="site_bg_color" class="color-picker-input" value="<?= isset($settings['site_bg_color']) ? $settings['site_bg_color'] : '#EEEEF2' ?>">
                                                 </div>
                                             </div>
                                     </div>

@@ -115,7 +115,7 @@
                                         <div class="dropdown-menu languageDropdown" aria-labelledby="navbarDropdown">
 
                                             <?php foreach ($languages as $key => $language) : ?>
-                                                <a class="dropdown-item" href="<?= base_url('home/website_lang/' . $language['slug']) . $ref_id; ?>">
+                                                <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug']) . $ref_id; ?>">
                                                     <span class="mr-2 <?= $language['slug'] === 'ar' ? 'fi fi-sa' : ($language['slug'] === 'fa' ? 'fi fi-ir' : ($key === 0 ? 'fi fi-gb' : 'fi fi-' . $language['slug']))
                                                                         ?>"></span><?= $language['lang_name']; ?>
                                                 </a>

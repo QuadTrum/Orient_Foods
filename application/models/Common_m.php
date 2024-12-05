@@ -2158,24 +2158,24 @@ class Common_m extends CI_Model
     }
 
 	// fetch manual faqs
-	function select_manual_reviews($table)
+	function select_manual_data($table)
 {
+	
     // Access CI instance
     $ci =& get_instance();
 
     // Get the session variable for 'home'
-    $languageSlug = $ci->session->userdata('home');
-
+    $languageSlug = $ci->session->userdata('site_lang');
+	
     // If no language slug is set, default to 'english'
     $languageSlug = $languageSlug ?? 'english';
 
     // Fetch the language ID from the 'language' table based on the slug
     $ci->db->select('id');
-    $ci->db->from('language');
+    $ci->db->from('languages');
     $ci->db->where('slug', $languageSlug);
     $languageQuery = $ci->db->get();
     $languageResult = $languageQuery->row_array();
-
     // Get the language ID or default to a fallback value
     $languageId = $languageResult['id'] ?? null;
 
@@ -2190,7 +2190,6 @@ class Common_m extends CI_Model
     $this->db->where('language_id', $languageId); // Filter by language ID
     $this->db->order_by('id', 'ASC');
     $query = $this->db->get();
-
     // Return the result
     return $query->result_array();
 }
