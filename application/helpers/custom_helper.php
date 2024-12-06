@@ -563,19 +563,19 @@ if (!function_exists('lang')) {
     }
 }
 // by MH 
-if (!function_exists('get_session')) {
-    function get_session()
+if (!function_exists('get_mh_session')) {
+    function get_mh_session()
     {
     $ci =& get_instance();
     // load language helper
     $ci->load->helper('language');
     $currentController = $ci->router->class;
-   //  echo $currentController;exit;
+     //echo $currentController;exit;
    $availablelangs  = ['home_page_lang','restaurant_page_lang','restaurant_admin_lang','super_admin_lang'];
    $homeCtrls       = ['home','login'];
    $restaurantCtrls = ['profile'];
    $restaurantAdmins = ['admin'];
-   $superAdmins      = ['dashboard'];
+   $superAdmins      = ['dashboard','settings'];
 
    $existingKeys = [];
    foreach ($availablelangs as $langKey) {
@@ -604,7 +604,7 @@ if (!function_exists('get_lang')) {
     function get_lang()
     {
         $ci = &get_instance();
-        $siteLang = get_session();
+        $siteLang = get_mh_session();
         if(isset($siteLang) && !empty($siteLang))
         {
             $name = $ci->session->userdata($siteLang);
@@ -3209,7 +3209,7 @@ if (!function_exists('site_lang')) {
     function site_lang()
     {
         $ci = &get_instance();
-        $siteLang = get_session();
+        $siteLang = get_mh_session();
       
         $data = (isset($siteLang) && !empty(auth($siteLang)))  ? auth($siteLang) : st()->language;
         return html_escape($data);

@@ -5,10 +5,12 @@
         $ci =& get_instance();
         $setting = settings();
         $ci->load->helper('language');
-       $siteLang  = $ci->session->userdata(get_session()) ;
+   
+       $siteLang  = get_mh_session() ;
        // Check if at least one key exists in the session
+       
        if (isset($siteLang) && !empty($siteLang)) {
-           
+        $siteLang = $ci->session->userdata(get_mh_session());
            $ci->lang->load('content',$siteLang);
        } else {
               // default language files
