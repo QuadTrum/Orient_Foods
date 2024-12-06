@@ -384,9 +384,17 @@ class Home extends MY_Controller
 	}
 
 
-	public function lang_switch($lang)
+	public function lang_switch($lang,$page="home_page_lang")
 	{
-		$this->session->set_userdata('site_lang', $lang);
+		//$this->session->set_userdata('site_lang', $lang);
+		// By MH
+		$this->session->set_userdata($page, $lang);
+		$ci =& get_instance();
+		// $currentController = $ci->router->class;
+		// echo $currentController;exit;
+		// $homeCtrls       = ['home','login'];
+		// $restaurantCtrls = ['profile'];
+		// $restaurantAdmins = [];
 		// If the user is logged in, update the preferred language in the database
 		// if ($this->session->has_userdata('id')) {
 		// 	$this->admin_m->preferred_language($this->session->userdata('id'), $lang);

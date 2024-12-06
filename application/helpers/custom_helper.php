@@ -562,17 +562,58 @@ if (!function_exists('lang')) {
         return !empty($ci->lang->line($data)) ? $ci->lang->line($data) : '';
     }
 }
+// by MH 
+if (!function_exists('get_session')) {
+    function get_session()
+    {
+    $ci =& get_instance();
+    // load language helper
+    $ci->load->helper('language');
+    $currentController = $ci->router->class;
+   //  echo $currentController;exit;
+   $availablelangs  = ['home_page_lang','restaurant_page_lang','restaurant_admin_lang','super_admin_lang'];
+   $homeCtrls       = ['home','login'];
+   $restaurantCtrls = ['profile'];
+   $restaurantAdmins = ['admin'];
+   $superAdmins      = ['dashboard'];
 
+   $existingKeys = [];
+   foreach ($availablelangs as $langKey) {
+       if ($ci->session->userdata($langKey)) {
+           $existingKeys[] = $langKey; // Add to existing keys if found in the session
+       }
+   }
+   if (!empty($existingKeys)) {
+    // get language for each session 
+  if(in_array($currentController,$homeCtrls))
+  $siteLang = "home_page_lang";
+  elseif(in_array($currentController,$restaurantCtrls))
+  $siteLang = "restaurant_page_lang";
+  elseif(in_array($currentController,$restaurantAdmins))
+  $siteLang = "restaurant_admin_lang";
+  elseif(in_array($currentController,$superAdmins))
+  $siteLang = "super_admin_lang";
+  return $siteLang;
+} else {
+       return Null;
+} 
+    }
+   
+}
 if (!function_exists('get_lang')) {
     function get_lang()
     {
         $ci = &get_instance();
-        if ($ci->session->userdata('site_lang') == '') {
+        $siteLang = get_session();
+        if(isset($siteLang) && !empty($siteLang))
+        {
+            $name = $ci->session->userdata($siteLang);
+            return $name;  
+        }
+        else
+        {
             $settings = $ci->admin_m->get_settings();
             return $settings['language'];
-        } else {
-            $name = $ci->session->userdata('site_lang');
-            return $name;
         }
     }
 }
@@ -697,6 +738,7 @@ if (!function_exists('settings')) {
     {
         $ci = &get_instance();
         $ci->load->model('admin_m');
+       
         $data = $ci->admin_m->get_settings();
         return $data;
     }
@@ -3167,7 +3209,9 @@ if (!function_exists('site_lang')) {
     function site_lang()
     {
         $ci = &get_instance();
-        $data = !empty(auth('site_lang')) ? auth('site_lang') : st()->language;
+        $siteLang = get_session();
+      
+        $data = (isset($siteLang) && !empty(auth($siteLang)))  ? auth($siteLang) : st()->language;
         return html_escape($data);
     }
 }

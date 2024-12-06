@@ -103,13 +103,13 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
                         <ul>
                             <?php if ($shop['is_language'] == 1) : ?>
                                 <?php if (sizeof($language) > 1) : ?>
-                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('site_lang')) && auth('site_lang') === 'english' ? 'gb' : (auth('site_lang') === 'fa' ? 'ir' : (auth('site_lang') === 'ar' ? 'sa' : auth('site_lang'))) ?>"></i>&nbsp;
-                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('site_lang')) ? auth('site_lang') : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
+                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('restaurant_page_lang')) && auth('restaurant_page_lang') === 'english' ? 'gb' : (auth('restaurant_page_lang') === 'fa' ? 'ir' : (auth('restaurant_page_lang') === 'ar' ? 'sa' : auth('restaurant_page_lang'))) ?>"></i>&nbsp;
+                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('restaurant_page_lang')) ? auth('restaurant_page_lang') : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
                                         <div class="navDropdownList" id="mainLang" style="display: none;">
                                             <ul>
                                                 <?php foreach ($language as $index => $ln) : ?>
                                                     <li>
-                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug); ?>">
+                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug.'/restaurant_page_lang'); ?>">
                                                             <span class="mr-2 <?=
                                                                                 $ln->slug === 'ar' ? 'fi fi-sa' : ($ln->slug === 'fa' ? 'fi fi-ir' : ($index === 0 ? 'fi fi-gb' : 'fi fi-' . $ln->slug)) ?>"></span>
                                                             <?= $ln->lang_name; ?>
