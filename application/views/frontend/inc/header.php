@@ -104,7 +104,19 @@
     <!-- custom css -->
 
 
+    <style>
+        /* Light mode */
+        body.light-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
 
+        /* Dark mode */
+        body.dark-mode {
+            background-color: #333333;
+            color: #ffffff;
+        }
+    </style>
 
 
     <?php include 'pwa_header_config.php' ?>
@@ -126,7 +138,8 @@
             .homeItemDetails {
                 background-color: <?= isset($u_info['menu_card_color']) ? $u_info['menu_card_color'] : '#4b566b'; ?> !important;
             }
-            .item_images{
+
+            .item_images {
                 background-color: <?= isset($u_info['menu_items_bg']) ? $u_info['menu_items_bg'] : ''; ?> !important;
             }
         </style>

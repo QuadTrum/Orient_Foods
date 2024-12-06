@@ -103,7 +103,7 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
                         <ul>
                             <?php if ($shop['is_language'] == 1) : ?>
                                 <?php if (sizeof($language) > 1) : ?>
-                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('site_lang')) && auth('site_lang') === 'english' ? 'gb' : (auth('site_lang') === 'fa' ? 'ir' : (auth('site_lang') === 'ar' ? 'sa' : auth('site_lang'))) ?>"></i>&nbsp;
+                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('site_lang')) && auth('site_lang') === 'english' ? 'gb' : (auth('site_lang') === 'fa' ? 'ir' : (auth('site_lang') === 'ar' ? 'sa' : auth('site_lang') ?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : '')))?>"></i>&nbsp;
                                             <span class="allow mobileLang"><?= lang_slug(!empty(auth('site_lang')) ? auth('site_lang') : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
                                         <div class="navDropdownList" id="mainLang" style="display: none;">
                                             <ul>

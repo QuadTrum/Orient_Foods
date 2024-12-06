@@ -21,6 +21,43 @@
          Default Js
          =============== -->
 
+<!-- HTML Structure -->
+<button id="lightModeButton" onclick="toggleDarkMode()">🌞</button>
+<button id="darkModeButton" onclick="toggleDarkMode()" style="display:none;">🌙</button>
+
+<script>
+    // Function to toggle dark and light modes
+    function toggleDarkMode() {
+        const body = document.body;
+        const darkButton = document.getElementById('darkModeButton');
+        const lightButton = document.getElementById('lightModeButton');
+        
+        if (body.classList.contains('dark-mode')) {
+            // Switch to light mode
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            darkButton.style.display = 'block';  // Show dark mode button
+            lightButton.style.display = 'none'; // Hide light mode button
+        } else {
+            // Switch to dark mode
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+            darkButton.style.display = 'none'; // Hide dark mode button
+            lightButton.style.display = 'block';  // Show light mode button
+        }
+
+        // Save the user's preference in localStorage
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // Apply the saved theme on page load
+    window.onload = function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.classList.add(savedTheme === 'dark' ? 'dark-mode' : 'light-mode');
+        document.getElementById('darkModeButton').style.display = savedTheme === 'dark' ? 'none' : 'block';
+        document.getElementById('lightModeButton').style.display = savedTheme === 'dark' ? 'block' : 'none';
+    };
+</script>
 
          <script src="<?= base_url(); ?>assets/frontend/js/popper.min.js" defer="true"></script>
          <script src="<?= base_url(); ?>assets/frontend/js/bootstrap.min.js" defer="true"></script>
