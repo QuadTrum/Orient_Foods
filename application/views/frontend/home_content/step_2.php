@@ -258,74 +258,54 @@
 		</div>
 	</section>
 <?php endif; ?>
-
+<!-- fetching dynamic reviews -->
 <div class="section-padding-top section-padding-bottom">
 	<div class="container py-5">
 		<div class="row reviewsRow">
 			<!-- First Review Card -->
-			<div class="col-md-6 mb-4">
-				<div class="d-flex align-items-start review-card" style="position:relative;left:80px">
-					<img src="https://via.placeholder.com/50" alt="Reviewer Image" class="mr-3">
-					<div>
-						<div class="star-rating">
-							★★★★★
+			<?php foreach (array_chunk($reviews, 2) as $reviewPair) : ?>
+				<!-- First Review Card -->
+				<div class="col-md-6 mb-4">
+					<div class="d-flex align-items-start review-card" style="position:relative;left:80px">
+						<img src="<?= !empty($reviewPair[0]['images']) ? base_url($reviewPair[0]['images']) : 'https://via.placeholder.com/50'; ?>"
+							alt="Reviewer Image" class="mr-3">
+						<div>
+							<div class="star-rating">
+								<?= str_repeat('★', intval($reviewPair[0]['ratings'])) ?>
+								<?= str_repeat('☆', max(0, 5 - intval($reviewPair[0]['ratings']))) ?>
+							</div>
+							<p class="review-text">
+								<?= html_escape(strip_tags($reviewPair[0]['reviews'])); ?>
+							</p>
+							<p class="review-author">-<?= html_escape($reviewPair[0]['customer_name']); ?></p>
+							<p class="review-restaurant"><?= html_escape($reviewPair[0]['restaurant_name']); ?></p>
 						</div>
-						<p class="review-text">
-							"We use FoodTiger to protect our visitors. Dirty old menus are a thing from the past. So far clients report no issues. And they love our new online menu."
-						</p>
-						<p class="review-author">- James Curran</p>
-						<p class="review-restaurant">Brooklyn Taco</p>
 					</div>
 				</div>
-			</div>
-			<!-- Second Review Card -->
-			<div class="col-md-6 mb-4 " style="margin-top:5rem;">
-				<div class="d-flex align-items-start review-card secondReviewCards">
-					<img src="https://via.placeholder.com/50" alt="Reviewer Image" class="mr-3">
-					<div>
-						<div class="star-rating">
-							★★★★★
-						</div>
-						<p class="review-text">
-							"No more printing and reprinting for some small mistake in our menu or price change. We love what FoodTiger have provided."
-						</p>
-						<p class="review-author">- Jessica Evans</p>
-						<p class="review-restaurant">Awang Italian Restaurant</p>
-					</div>
-				</div>
-			</div>
-			<!-- first Review Card -->
-			<div class="col-md-6 mb-4">
-				<div class="d-flex align-items-start review-card" style="position:relative;left:80px">
-					<img src="https://via.placeholder.com/50" alt="Reviewer Image" class="mr-3">
-					<div>
-						<div class="star-rating">
-							★★★★★
-						</div>
-						<p class="review-text">
-							"No more printing and reprinting for some small mistake in our menu or price change. We love what FoodTiger have provided."
-						</p>
-						<p class="review-author">- Jessica Evans</p>
-						<p class="review-restaurant">Awang Italian Restaurant</p>
-					</div>
-				</div>
-			</div>
 
-			<div class="col-md-6 mb-4" style="margin-top:5rem;">
-				<div class="d-flex align-items-start review-card secondReviewCards">
-					<img src="https://via.placeholder.com/50" alt="Reviewer Image" class="mr-3">
-					<div>
-						<div class="star-rating">
-							★★★★★
+				<?php if (!empty($reviewPair[1])) : ?>
+					<!-- Second Review Card -->
+					<div class="col-md-6 mb-4" style="margin-top:5rem;">
+						<div class="d-flex align-items-start review-card secondReviewCards">
+							<img src="<?= !empty($reviewPair[1]['images']) ? base_url($reviewPair[1]['images']) : 'https://via.placeholder.com/50'; ?>"
+								alt="Reviewer Image" class="mr-3">
+							<div>
+								<div class="star-rating">
+									<?= str_repeat('★', intval($reviewPair[1]['ratings'])) ?>
+									<?= str_repeat('☆', max(0, 5 - intval($reviewPair[1]['ratings']))) ?>
+								</div>
+								<p class="review-text">
+									<?= html_escape(strip_tags($reviewPair[1]['reviews'])); ?>
+								</p>
+								<p class="review-author">-<?= html_escape($reviewPair[1]['customer_name']); ?></p>
+								<p class="review-restaurant"><?= html_escape($reviewPair[1]['restaurant_name']); ?></p>
+							</div>
 						</div>
-						<p class="review-text">
-							"No more printing and reprinting for some small mistake in our menu or price change. We love what FoodTiger have provided."
-						</p>
-						<p class="review-author">- Jessica Evans</p>
-						<p class="review-restaurant">Awang Italian Restaurant</p>
 					</div>
-				</div>
-			</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
+
+
 		</div>
 	</div>
 </div>

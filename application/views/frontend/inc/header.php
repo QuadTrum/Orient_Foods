@@ -105,16 +105,76 @@
 
 
     <style>
+        .toggleTheme {
+            z-index: 1;
+            right: 35px;
+            position: fixed;
+            top: 16rem;
+        }
+
         /* Light mode */
         body.light-mode {
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #ffffff !important;
+            color: #000000 !important;
         }
 
         /* Dark mode */
         body.dark-mode {
-            background-color: #333333;
-            color: #ffffff;
+            background-color: #333333 !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .bannerTitle, body.dark-mode  .bannerHeadline{
+            color: #ffffff !important;
+        }
+        body.dark-mode .moduleHeading,
+        body.dark-mode .introTitle,
+        body.dark-mode .introSubHeadline,
+        body.dark-mode .heading-text,
+        body.dark-mode .features-heading p,
+        body.dark-mode .page_accordion_header,
+        body.dark-mode .accordion_content
+        {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .teamSections,
+        body.dark-mode .newPriceLayout .card,
+        body.dark-mode .review-card,
+        body.dark-mode .features-wrap,
+        body.dark-mode .page_accordion_header,
+        body.dark-mode .accordion_content
+        {
+            background-color: #333333 !important;
+        }
+
+        /* light mode button desgin */
+        #lightModeButton {
+            border: 1px;
+            background: #333;
+            padding: 7px;
+            border-radius: 100%;
+        }
+        #lightModeButton:hover {
+            border: 1px;
+            background: #ffffff;
+            padding: 7px;
+            border-radius: 100%;
+            transition:0.5s all ease-in-out ;
+        }
+        /* dark mode button  */
+        #darkModeButton {
+            border: 1px;
+            background: #fff;
+            padding: 7px;
+            border-radius: 100%;
+        }
+        #darkModeButton:hover {
+            border: 1px;
+            color: #fff;
+            background: #333;
+            padding: 7px;
+            border-radius: 100%;
+            transition:0.5s all ease-in-out ;
         }
     </style>
 
@@ -323,3 +383,7 @@
         <?php endif; ?>
 
         <div class="mainWrapper">
+            <div class="toggleTheme">
+                <button id="lightModeButton" onclick="toggleDarkMode()"><i class="far fa-sun" style="color:orange;font-size:1.5em;"></i></button>
+                <button id="darkModeButton" onclick="toggleDarkMode()" style="display:none;"><i class="fas fa-moon" style="color:dark;font-size:1.5em;transform: rotate(240deg);"></i></button>
+            </div>

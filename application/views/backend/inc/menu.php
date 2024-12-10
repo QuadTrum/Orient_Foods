@@ -88,14 +88,14 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                   <i class="fi fi-<?=
-                                  !empty(auth('site_lang')) && auth('site_lang') === 'english' ? 'gb' : (auth('site_lang') === 'fa' ? 'ir' : (auth('site_lang') === 'ar' ? 'sa' : auth('site_lang')))
+                                  !empty(auth('restaurant_admin_lang')) && auth('restaurant_admin_lang') === 'english' ? 'gb' : (auth('restaurant_admin_lang') === 'fa' ? 'ir' : (auth('restaurant_admin_lang') === 'ar' ? 'sa' : auth('restaurant_admin_lang')))
                                   ?>"></i>&nbsp;
 
-                  <?= lang_slug(!empty(auth('site_lang')) ? auth('site_lang') : $settings['language']); ?> &nbsp;<span class="caret"></span></a>
+                  <?= lang_slug(!empty(auth('restaurant_admin_lang')) ? auth('restaurant_admin_lang') : $settings['language']); ?> &nbsp;<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                   <?php foreach ($shop_languages as $key => $language) : ?>
                     <li>
-                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language->slug); ?>">
+                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/restaurant_admin_lang/' . $language->slug); ?>">
                         <span class="mr-2 <?=
                                           $language->slug === 'ar' ? 'fi fi-sa' : ($language->slug === 'fa' ? 'fi fi-ir' : ($key === 0 ? 'fi fi-gb' : 'fi fi-' . $language->slug))
                                           ?>"></span>
@@ -122,13 +122,13 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                   <i class="icofont-globe"></i>
-                  <?= lang_slug(!empty(auth('site_lang')) ? auth('site_lang') : $settings['language']); ?> &nbsp;<span class="caret"></span></a>
+                  <?= lang_slug(!empty(auth('super_admin_lang')) ? auth('super_admin_lang') : $settings['language']); ?> &nbsp;<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
 
 
                   <?php foreach ($languages as $key => $language) : ?>
                     <li>
-                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug']); ?>"><span class="<?= $key === 0 ? 'fi ' : 'fi fi-' . $language['slug'] ?>"></span> <?= $language['lang_name']; ?></a>
+                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug'].'/super_admin_lang'); ?>"><span class="<?= $key === 0 ? 'fi ' : 'fi fi-' . $language['slug'] ?>"></span> <?= $language['lang_name']; ?></a>
                     </li>
                   <?php endforeach ?>
                 </ul>

@@ -45,11 +45,12 @@ class Home extends MY_Controller
 		$data['left_features'] = $this->common_m->get_home_features_by_type('left');
 		$data['right_features'] = $this->common_m->get_home_features_by_type('right');
 		$data['faqs'] = $this->common_m->select_manual_data('faq');
+		$data['reviews'] = $this->common_m->select_manual_data('manual_reviews');
 		$data['services'] = $this->common_m->select_with_status('site_services');
 		$data['team'] = $this->common_m->select_with_status('site_team');
 		$data['packages'] = $this->common_m->select_with_status('packages');
 		$data['all_features'] = $this->common_m->select_with_status('features');
-		
+		// var_dump($data['reviews']).die();	
 		$load_data = $this->load->view('frontend/home_content/step_2', $data, TRUE);
 		echo json_encode(['st' => 1, 'load_data' => $load_data]);
 	}
@@ -384,9 +385,17 @@ class Home extends MY_Controller
 	}
 
 
-	public function lang_switch($lang)
+	public function lang_switch($lang,$page="home_page_lang")
 	{
-		$this->session->set_userdata('site_lang', $lang);
+		//$this->session->set_userdata('site_lang', $lang);
+		// By MH
+		$this->session->set_userdata($page, $lang);
+		$ci =& get_instance();
+		// $currentController = $ci->router->class;
+		// echo $currentController;exit;
+		// $homeCtrls       = ['home','login'];
+		// $restaurantCtrls = ['profile'];
+		// $restaurantAdmins = [];
 		// If the user is logged in, update the preferred language in the database
 		// if ($this->session->has_userdata('id')) {
 		// 	$this->admin_m->preferred_language($this->session->userdata('id'), $lang);

@@ -103,10 +103,9 @@
                                 <?php if (sizeof($languages) > 1) : ?>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fi fi-<?=!empty(auth('site_lang')) && auth('site_lang') === 'english' ? 'gb' : (auth('site_lang') === 'fa' ? 'ir' : (auth('site_lang') === 'ar' ? 'sa' : (auth('site_lang') ?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : ''))))?>"></i>&nbsp;
-
+                                            <i class="fi fi-<?= !empty(auth('home_page_lang')) && auth('home_page_lang') === 'english' ? 'gb' : (auth('home_page_lang') === 'fa' ? 'ir' : (auth('home_page_lang') === 'ar' ? 'sa' : auth('home_page_lang')?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : '')))?>"></i>&nbsp;
                                             <?php foreach ($languages as $language) : ?>
-                                                <?php if (auth('site_lang') === $language['slug']): ?>
+                                                <?php if (auth('home_page_lang') === $language['slug']): ?>
                                                     <?= ucfirst($language['lang_name']); ?>
                                                     <?php break; ?>
                                                 <?php endif; ?>
@@ -116,7 +115,7 @@
                                         <div class="dropdown-menu languageDropdown" aria-labelledby="navbarDropdown">
 
                                             <?php foreach ($languages as $key => $language) : ?>
-                                                <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug']) . $ref_id; ?>">
+                                                <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug'].'/home_page_lang') . $ref_id; ?>">
                                                     <span class="mr-2 <?= $language['slug'] === 'ar' ? 'fi fi-sa' : ($language['slug'] === 'fa' ? 'fi fi-ir' : ($key === 0 ? 'fi fi-gb' : 'fi fi-' . $language['slug']))
                                                                         ?>"></span><?= $language['lang_name']; ?>
                                                 </a>

@@ -1104,3 +1104,7 @@ i.phone {
     text-align: right !important;
     display: block;
 }
+.navLeftMenu a.navbar-brand{
+    position: relative;
+    right: 20rem;
+}

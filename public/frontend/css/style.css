@@ -2,6 +2,10 @@
 ================================================== */
 
 :root {
+    --background-light:#ffff;
+    --color-light:#ffff;
+    --background-dark: #333333;
+    --color-dark:#343f52;
     --defaultColor: #50cd89;
     --grayColor: #b5b5c3;
     --primaryColor: #009ef7;
@@ -7091,6 +7095,8 @@ a.navbar-brand.landscape img {
 }
 
 .navLeftMenu a.navbar-brand {
+    position: relative;
+    left: 20rem;
     height: 48px;
     width: 100%;
 }

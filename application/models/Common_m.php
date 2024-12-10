@@ -2165,7 +2165,7 @@ class Common_m extends CI_Model
     $ci =& get_instance();
 
     // Get the session variable for 'home'
-    $languageSlug = $ci->session->userdata('site_lang');
+    $languageSlug = $ci->session->userdata('home_page_lang');
 	
     // If no language slug is set, default to 'english'
     $languageSlug = $languageSlug ?? 'english';

@@ -22,9 +22,7 @@
          =============== -->
 
 <!-- HTML Structure -->
-<button id="lightModeButton" onclick="toggleDarkMode()">🌞</button>
-<button id="darkModeButton" onclick="toggleDarkMode()" style="display:none;">🌙</button>
-
+ 
 <script>
     // Function to toggle dark and light modes
     function toggleDarkMode() {
