@@ -309,4 +309,25 @@ class Custom_m extends CI_Model
 		// Save the XML content to a file
 		file_put_contents(FCPATH . 'sitemap.xml', $sitemap);
 	}
+
+		/**
+	 ** get User id by name
+	 **/
+	public function get_id_by_segment($name)
+	{
+		// var_dump($name).die();
+		$this->db->select('u.id,username');
+		$this->db->from('users as u');
+		$this->db->where('u.username', $name);
+		$this->db->where('u.is_verify', 1);
+		$this->db->where('u.is_active', 1);
+		$query = $this->db->get();
+		
+		$query = $query->row_array();
+		// var_dump($query).die();
+		if(isset($query))
+		return $query['id'];
+	    else 
+		return false;
+	}
 }

@@ -54,6 +54,9 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
 
     }
 </style>
+<?php 
+$url = basename(parse_url(current_url(), PHP_URL_PATH)); 
+ ?>
 <div class="customNavBar">
     <div class="customNav">
         <div class="container restaurant-container">
@@ -62,7 +65,6 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
                     <ul>
                         <li><a href="javascript:;" class="menuToggle"><i class="fas fa-bars menuBar"></i></a></li>
                     </ul>
-
                     <div class="customMenu nwStyleNav">
                         <ul class="navbar-nav">
                             <?php if (is_feature($id, 'welcome') == 1 && is_active($id, 'welcome')) : ?>
@@ -103,13 +105,13 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
                         <ul>
                             <?php if ($shop['is_language'] == 1) : ?>
                                 <?php if (sizeof($language) > 1) : ?>
-                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('restaurant_page_lang')) && auth('restaurant_page_lang') === 'english' ? 'gb' : (auth('restaurant_page_lang') === 'fa' ? 'ir' : (auth('restaurant_page_lang') === 'ar' ? 'sa' : auth('restaurant_page_lang')?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : '')))?>"></i>&nbsp;
-                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('restaurant_page_lang')) ? auth('restaurant_page_lang') : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
+                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('restaurant_page_lang_'.$url)) && auth('restaurant_page_lang_'.$url) === 'english' ? 'gb' : (auth('restaurant_page_lang_'.$url) === 'fa' ? 'ir' : (auth('restaurant_page_lang_'.$url) === 'ar' ? 'sa' : auth('restaurant_page_lang_'.$url)?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : '')))?>"></i>&nbsp;
+                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('restaurant_page_lang_'.$url)) ? auth('restaurant_page_lang_'.$url) : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
                                         <div class="navDropdownList" id="mainLang" style="display: none;">
                                             <ul>
                                                 <?php foreach ($language as $index => $ln) : ?>
                                                     <li>
-                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug.'/restaurant_page_lang'); ?>">
+                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug.'/restaurant_page_lang_'.$url); ?>">
                                                             <span class="mr-2 <?=
                                                                                 $ln->slug === 'ar' ? 'fi fi-sa' : ($ln->slug === 'fa' ? 'fi fi-ir' : ($index === 0 ? 'fi fi-gb' : 'fi fi-' . $ln->slug)) ?>"></span>
                                                             <?= $ln->lang_name; ?>

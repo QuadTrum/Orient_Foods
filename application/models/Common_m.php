@@ -121,9 +121,9 @@ class Common_m extends CI_Model
 		return $query;
 	}
 
-	/**
-	 ** get User id by name
-	 **/
+	// /**
+	//  ** get User id by name
+	//  **/
 	public function get_id_by_slug($name)
 	{
 		

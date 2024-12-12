@@ -595,8 +595,9 @@ if (!function_exists('get_mh_session')) {
             }
             elseif (in_array($currentController, $restaurantCtrls))
             {
-                get_restaurant_name_from_url();
-                $siteLang = "restaurant_page_lang";
+                $slug = get_restaurant_name_from_url();
+                $siteLang = "restaurant_page_lang_".$slug;
+    
             }     
             elseif (in_array($currentController, $restaurantAdmins))
             {
@@ -619,9 +620,11 @@ if (!function_exists('get_restaurant_name_from_url')) {
       
         // Get the CodeIgniter instance
         $CI =& get_instance();
+        $current_url = $CI->uri->uri_string(); // Get the full URI string
+        $name = basename($current_url);
         // Get total segments
         $segmentCount = $CI->uri->total_segments();
-       
+    //    var_dump($segmentCount).die();
         // Iterate through the segments to find the restaurant name
         for ($i = 1; $i <= $segmentCount; $i++) {
             $segment = $CI->uri->segment($i);
@@ -632,7 +635,7 @@ if (!function_exists('get_restaurant_name_from_url')) {
             }
         }
         
-        return null; // Return null if no restaurant name is found
+        return $name; // Return null if no restaurant name is found
     }
 
     // Example validation function to check the database
@@ -641,11 +644,19 @@ if (!function_exists('get_restaurant_name_from_url')) {
 if (!function_exists('is_restaurant')) {
     function is_restaurant($segment) {
         $ci =& get_instance();
-         $ci->load->model('common_m');
-    
+        //  $ci->load->model('common_m');
+         if (!isset($ci->custom_m)) {
+            $ci->load->model('custom_m');
+        }
+        // var_dump($ci->common_m).die();
 
-        $data = $ci->common_m->get_id_by_slug($segment);
-        return $data;
+        $data = $ci->custom_m->get_id_by_segment($segment);
+        // var_dump($data).die();
+        if ($data) {
+            return true; // Return true if the restaurant exists
+        } else {
+            return false; // Return false if no restaurant found
+        }
     }
 }
 

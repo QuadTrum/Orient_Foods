@@ -26,7 +26,7 @@ class Profile extends MY_Controller
 
     public function index($slug = '')
     {
-        $this->load->model('common_m'); 
+        $this->load->model('common_m');  
         $slug = custom_domain($this->url, $slug);
         $data = array();
         $data['_title'] = lang('home');
@@ -35,7 +35,7 @@ class Profile extends MY_Controller
         $data['slug'] = $slug;
         $data['is_share'] = 1;
         $data['is_footer'] = true;
-        $id = get_id_by_slug($slug);
+        $id = $this->common_m->get_id_by_slug($slug);
         $data['id'] = $id;
         if (empty($id)) {
             redirect(base_url('error-404'));
