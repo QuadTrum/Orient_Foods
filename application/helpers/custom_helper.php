@@ -590,19 +590,65 @@ if (!function_exists('get_mh_session')) {
         if (!empty($existingKeys)) {
             // get language for each session 
             if (in_array($currentController, $homeCtrls))
+            {
                 $siteLang = "home_page_lang";
+            }
             elseif (in_array($currentController, $restaurantCtrls))
+            {
+                get_restaurant_name_from_url();
                 $siteLang = "restaurant_page_lang";
+            }     
             elseif (in_array($currentController, $restaurantAdmins))
-                $siteLang = "restaurant_admin_lang";
+            {
+                
+                 $siteLang = "restaurant_admin_lang";
+            }             
             elseif (in_array($currentController, $superAdmins))
-                $siteLang = "super_admin_lang";
+            {
+             $siteLang = "super_admin_lang";   
+            }
+                
             return $siteLang;
         } else {
             return Null;
         }
     }
 }
+if (!function_exists('get_restaurant_name_from_url')) {
+    function get_restaurant_name_from_url() {
+      
+        // Get the CodeIgniter instance
+        $CI =& get_instance();
+        // Get total segments
+        $segmentCount = $CI->uri->total_segments();
+       
+        // Iterate through the segments to find the restaurant name
+        for ($i = 1; $i <= $segmentCount; $i++) {
+            $segment = $CI->uri->segment($i);
+            
+            // Call a model or function to verify if this is a restaurant name
+            if (is_restaurant($segment)) {
+                return $segment; // Return the restaurant name if found
+            }
+        }
+        
+        return null; // Return null if no restaurant name is found
+    }
+
+    // Example validation function to check the database
+
+}
+if (!function_exists('is_restaurant')) {
+    function is_restaurant($segment) {
+        $ci =& get_instance();
+         $ci->load->model('common_m');
+    
+
+        $data = $ci->common_m->get_id_by_slug($segment);
+        return $data;
+    }
+}
+
 if (!function_exists('get_lang')) {
     function get_lang()
     {

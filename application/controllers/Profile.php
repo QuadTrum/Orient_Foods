@@ -7,6 +7,7 @@ class Profile extends MY_Controller
     {
         parent::__construct();
         $this->load->library('cart');
+       
         if (d_auth('is_discount') == true) {
             $this->coupon_id = !empty(d_auth('coupon_id')) ? d_auth('coupon_id') : 0;
         } else {
@@ -25,6 +26,7 @@ class Profile extends MY_Controller
 
     public function index($slug = '')
     {
+        $this->load->model('common_m'); 
         $slug = custom_domain($this->url, $slug);
         $data = array();
         $data['_title'] = lang('home');

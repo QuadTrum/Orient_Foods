@@ -126,13 +126,16 @@ class Common_m extends CI_Model
 	 **/
 	public function get_id_by_slug($name)
 	{
+		
 		$this->db->select('u.id,username');
 		$this->db->from('users as u');
 		$this->db->where('u.username', $name);
 		$this->db->where('u.is_verify', 1);
 		$this->db->where('u.is_active', 1);
 		$query = $this->db->get();
+		
 		$query = $query->row_array();
+		
 		return $query['id'];
 	}
 
