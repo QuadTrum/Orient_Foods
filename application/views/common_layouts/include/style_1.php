@@ -111,7 +111,7 @@ $url = basename(parse_url(current_url(), PHP_URL_PATH));
                                             <ul>
                                                 <?php foreach ($language as $index => $ln) : ?>
                                                     <li>
-                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug.'/restaurant_page_lang_'.$url); ?>">
+                                                        <a href="<?= base_url('home/lang_switch/'.$ln->slug.'/restaurant_page_lang_'.$url); ?>">
                                                             <span class="mr-2 <?=
                                                                                 $ln->slug === 'ar' ? 'fi fi-sa' : ($ln->slug === 'fa' ? 'fi fi-ir' : ($index === 0 ? 'fi fi-gb' : 'fi fi-' . $ln->slug)) ?>"></span>
                                                             <?= $ln->lang_name; ?>

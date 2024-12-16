@@ -95,7 +95,7 @@
                 <ul class="dropdown-menu" role="menu">
                   <?php foreach ($shop_languages as $key => $language) : ?>
                     <li>
-                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/restaurant_admin_lang/' . $language->slug); ?>">
+                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/'. $language->slug.'/restaurant_admin_lang'); ?>">
                         <span class="mr-2 <?=
                                           $language->slug === 'ar' ? 'fi fi-sa' : ($language->slug === 'fa' ? 'fi fi-ir' : ($key === 0 ? 'fi fi-gb' : 'fi fi-' . $language->slug))
                                           ?>"></span>

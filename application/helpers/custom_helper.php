@@ -571,6 +571,7 @@ if (!function_exists('get_mh_session')) {
         // var_dump($ci).die();
         $ci->load->helper('language');
         $currentController = $ci->router->class;
+        // var_dump($currentController).die();
         // $lastSegment = $ci->uri->segment($ci->uri->total_segments());
         // $profileRestaurantArray = explode("/", $lastSegment);
         // var_dump($profileRestaurantArray).die();
@@ -578,7 +579,7 @@ if (!function_exists('get_mh_session')) {
         $availablelangs  = ['home_page_lang', 'restaurant_page_lang', 'restaurant_admin_lang', 'super_admin_lang'];
         $homeCtrls       = ['home', 'login'];
         $restaurantCtrls = ['profile'];
-        $restaurantAdmins = ['admin'];
+        $restaurantAdmins = ['admin','dashboard'];
         $superAdmins      = ['dashboard', 'settings'];
 
         $existingKeys = [];
@@ -587,7 +588,9 @@ if (!function_exists('get_mh_session')) {
                 $existingKeys[] = $langKey; // Add to existing keys if found in the session
             }
         }
+        
         if (!empty($existingKeys)) {
+           
             // get language for each session 
             if (in_array($currentController, $homeCtrls))
             {
@@ -601,7 +604,7 @@ if (!function_exists('get_mh_session')) {
             }     
             elseif (in_array($currentController, $restaurantAdmins))
             {
-                
+                // var_dump($restaurantAdmins).die();
                  $siteLang = "restaurant_admin_lang";
             }             
             elseif (in_array($currentController, $superAdmins))
@@ -611,6 +614,7 @@ if (!function_exists('get_mh_session')) {
                 
             return $siteLang;
         } else {
+            
             return Null;
         }
     }
@@ -3169,6 +3173,7 @@ if (!function_exists('shop_languages')) {
 if (!function_exists('shop_default_language')) {
     function shop_default_language($id)
     {
+       
         $ci = &get_instance();
         $settings = settings();
         if (empty(auth('vendor_lang'))) :
