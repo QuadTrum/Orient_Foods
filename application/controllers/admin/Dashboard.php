@@ -14,6 +14,7 @@ class Dashboard extends MY_Controller
 
 	public function index()
 	{
+		
 
 		if ($this->is_redirect == 1 && $this->auth['user_role'] == 1) {
 			redirect($this->redirect_url);

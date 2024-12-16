@@ -570,7 +570,9 @@ if (!function_exists('get_mh_session')) {
         // load language helper
         // var_dump($ci).die();
         $ci->load->helper('language');
+        // var_dump(current_url()) . die();
         $currentController = $ci->router->class;
+        $currentUrl = current_url();
         // var_dump($currentController).die();
         // $lastSegment = $ci->uri->segment($ci->uri->total_segments());
         // $profileRestaurantArray = explode("/", $lastSegment);
@@ -579,7 +581,7 @@ if (!function_exists('get_mh_session')) {
         $availablelangs  = ['home_page_lang', 'restaurant_page_lang', 'restaurant_admin_lang', 'super_admin_lang'];
         $homeCtrls       = ['home', 'login'];
         $restaurantCtrls = ['profile'];
-        $restaurantAdmins = ['admin','dashboard'];
+        $restaurantAdmins = ['admin', 'dashboard', 'settings', 'home','adminstaff','restaurant','kds','reports','auth'];
         $superAdmins      = ['dashboard', 'settings'];
 
         $existingKeys = [];
@@ -588,57 +590,55 @@ if (!function_exists('get_mh_session')) {
                 $existingKeys[] = $langKey; // Add to existing keys if found in the session
             }
         }
-        
+
         if (!empty($existingKeys)) {
-           
-            // get language for each session 
-            if (in_array($currentController, $homeCtrls))
-            {
+
+            // Check if 'admin' exists in the URL
+            if (strpos($currentUrl, 'admin') !== false && in_array($currentController, $restaurantAdmins)) {
+                $siteLang = "restaurant_admin_lang";
+
+            } elseif (in_array($currentController, $homeCtrls)) {
+
                 $siteLang = "home_page_lang";
-            }
-            elseif (in_array($currentController, $restaurantCtrls))
-            {
-                $slug = get_restaurant_name_from_url();
-                $siteLang = "restaurant_page_lang_".$slug;
-    
-            }     
-            elseif (in_array($currentController, $restaurantAdmins))
-            {
-                // var_dump($restaurantAdmins).die();
-                 $siteLang = "restaurant_admin_lang";
-            }             
-            elseif (in_array($currentController, $superAdmins))
-            {
-             $siteLang = "super_admin_lang";   
-            }
+
+            } elseif (in_array($currentController, $restaurantCtrls)) {
                 
+                $slug = get_restaurant_name_from_url();
+                $siteLang = "restaurant_page_lang_" . $slug;
+
+            } elseif (in_array($currentController, $superAdmins)) {
+
+                $siteLang = "super_admin_lang";
+
+            }
+
             return $siteLang;
         } else {
-            
-            return Null;
+            return null;
         }
     }
 }
 if (!function_exists('get_restaurant_name_from_url')) {
-    function get_restaurant_name_from_url() {
-      
+    function get_restaurant_name_from_url()
+    {
+
         // Get the CodeIgniter instance
-        $CI =& get_instance();
+        $CI = &get_instance();
         $current_url = $CI->uri->uri_string(); // Get the full URI string
         $name = basename($current_url);
         // Get total segments
         $segmentCount = $CI->uri->total_segments();
-    //    var_dump($segmentCount).die();
+        //    var_dump($segmentCount).die();
         // Iterate through the segments to find the restaurant name
         for ($i = 1; $i <= $segmentCount; $i++) {
             $segment = $CI->uri->segment($i);
-            
+
             // Call a model or function to verify if this is a restaurant name
             if (is_restaurant($segment)) {
                 return $segment; // Return the restaurant name if found
             }
         }
-        
+
         return $name; // Return null if no restaurant name is found
     }
 
@@ -646,10 +646,11 @@ if (!function_exists('get_restaurant_name_from_url')) {
 
 }
 if (!function_exists('is_restaurant')) {
-    function is_restaurant($segment) {
-        $ci =& get_instance();
+    function is_restaurant($segment)
+    {
+        $ci = &get_instance();
         //  $ci->load->model('common_m');
-         if (!isset($ci->custom_m)) {
+        if (!isset($ci->custom_m)) {
             $ci->load->model('custom_m');
         }
         // var_dump($ci->common_m).die();
@@ -3173,7 +3174,7 @@ if (!function_exists('shop_languages')) {
 if (!function_exists('shop_default_language')) {
     function shop_default_language($id)
     {
-       
+
         $ci = &get_instance();
         $settings = settings();
         if (empty(auth('vendor_lang'))) :

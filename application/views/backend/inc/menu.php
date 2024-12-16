@@ -128,7 +128,7 @@
 
                   <?php foreach ($languages as $key => $language) : ?>
                     <li>
-                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/' . $language['slug'].'/super_admin_lang'); ?>"><span class="<?= $key === 0 ? 'fi ' : 'fi fi-' . $language['slug'] ?>"></span> <?= $language['lang_name']; ?></a>
+                      <a class="dropdown-item" href="<?= base_url('home/lang_switch/'. $language['slug'].'/restaurant_admin_lang'); ?>"><span class="<?= $key === 0 ? 'fi ' : 'fi fi-' . $language['slug'] ?>"></span> <?= $language['lang_name']; ?></a>
                     </li>
                   <?php endforeach ?>
                 </ul>
