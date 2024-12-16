@@ -581,7 +581,7 @@ if (!function_exists('get_mh_session')) {
         $availablelangs  = ['home_page_lang', 'restaurant_page_lang', 'restaurant_admin_lang', 'super_admin_lang'];
         $homeCtrls       = ['home', 'login'];
         $restaurantCtrls = ['profile'];
-        $restaurantAdmins = ['admin', 'dashboard', 'settings', 'home','adminstaff','restaurant','kds','reports','auth'];
+        $restaurantAdmins = ['admin', 'dashboard', 'settings', 'home','adminstaff','restaurant','kds','reports','auth','menu'];
         $superAdmins      = ['dashboard', 'settings'];
 
         $existingKeys = [];
