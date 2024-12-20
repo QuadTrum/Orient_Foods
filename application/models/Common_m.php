@@ -992,7 +992,11 @@ class Common_m extends CI_Model
 
 	public function get_item_by_cat_id_ln($user_id, $cat_id, $limit = 0, $per_page = 0, $offset = 0, $total = 0)
 	{
-
+		$lang_id = $this->db->select('id')
+		->from('languages')
+		->where('slug', $this->site_lang)
+		->get()
+		->row('id');
 		$this->db->select('i.*,i.id as item_id,a.name as allergen,c.id,c.status');
 		$this->db->from('items i');
 		$this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
@@ -1005,8 +1009,8 @@ class Common_m extends CI_Model
 		$this->db->where('c.status', 1);
 		$this->db->where('c.is_pos_only', 0);
 		$this->db->where('i.is_pos_only', 0);
-		$this->db->where('i.language', $this->site_lang);
-		$this->db->where('c.language', $this->site_lang);
+		$this->db->where('i.language_id',$lang_id);
+		$this->db->where('c.language_id',$lang_id);
 
 
 		if (isset($_GET['item']) && !empty($_GET['item'])) {
@@ -1817,13 +1821,19 @@ class Common_m extends CI_Model
 
 	public function get_my_categories($user_id, $language = null, $limit = 0)
 	{
+		$lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $this->site_lang)
+            ->get()
+            ->row('id');
+			
 		$shop_id = restaurant($user_id)->id;
 		$this->db->select('mt.*');
 		$this->db->from('menu_type mt');
 		$this->db->where('mt.user_id', $user_id);
 		$this->db->where('mt.is_pos_only', 0);
 		$this->db->where('mt.status', 1);
-		$this->db->where('mt.language', !empty($language) ? $language : $this->site_lang);
+		$this->db->where('mt.language_id',  $lang_id);
 
 		if ($limit != 0) {
 			$this->db->limit($limit);
@@ -1838,7 +1848,7 @@ class Common_m extends CI_Model
 			$this->db->where('i.user_id', $user_id);
 			$this->db->where('i.status', 1);
 			$this->db->where('i.is_pos_only', 0);
-			$this->db->where('i.language', !empty($language) ? $language : $this->site_lang);
+			$this->db->where('i.language_id', $lang_id);
 			$this->db->group_by('i.id');
 			$this->db->order_by('i.orders', 'ASC');
 			$query2 = $this->db->get();
@@ -1867,13 +1877,18 @@ class Common_m extends CI_Model
 
 	public function get_cat_info_by_id_ln($user_id, $cat_id)
 	{
-
+		$lang_id = $this->db->select('id')
+		->from('languages')
+		->where('slug', $this->site_lang)
+		->get()
+		->row('id');
+		
 		$this->db->select('mi.*');
 		$this->db->from('menu_type mi');
 		$this->db->where('md5(mi.category_id)', $cat_id);
 		$this->db->where('mi.user_id', $user_id);
 		$this->db->where('mi.status', 1);
-		$this->db->where('mi.language', $this->site_lang);
+		$this->db->where('mi.language_id', $lang_id);
 		$this->db->order_by('mi.id', 'ASC');
 		$query = $this->db->get();
 		$query = $query->row_array();
@@ -2110,12 +2125,17 @@ class Common_m extends CI_Model
 
 	public function get_featured_items($shop_id)
 	{
+		$lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $this->site_lang)
+            ->get()
+            ->row('id');
 		$this->db->select('i.*,i.id as item_id,a.name as allergen,m.id as category_id');
 		$this->db->from('items i');
 		$this->db->join('menu_type m', 'm.id = i.cat_id', 'LEFT');
 		$this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
 		$this->db->where('i.shop_id', $shop_id);
-		$this->db->where('i.language', $this->site_lang);
+		$this->db->where('i.language_id', $lang_id);
 		$this->db->where('i.status', 1);
 		$this->db->where('i.is_pos_only', 0);
 		$this->db->where('i.is_features', 1);
@@ -2128,11 +2148,17 @@ class Common_m extends CI_Model
 
 	public function get_popular_items($shop_id)
 	{
+		$lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $this->site_lang)
+            ->get()
+            ->row('id');
+
 		$this->db->select('or.item_id, COUNT(*) as order_count,i.*,i.id as item_id,m.id as category_id', FALSE);
 		$this->db->from('order_item_list or');
 		$this->db->join('items i', 'i.id = or.item_id', 'LEFT');
 		$this->db->join('menu_type m', 'm.id = i.cat_id', 'LEFT');
-		$this->db->where('i.language', $this->site_lang);
+		$this->db->where('i.language', $lang_id);
 		$this->db->where('or.shop_id', $shop_id);
 		$this->db->where('i.status', 1);
 		$this->db->where('i.is_pos_only', 0);
@@ -2145,9 +2171,14 @@ class Common_m extends CI_Model
 
 	public function get_categories($id)
 	{
+		$lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $this->site_lang)
+            ->get()
+            ->row('id');
 		$this->db->select('name,thumb,language,category_id');
 		$this->db->from('menu_type');
-		$this->db->where('language', $this->site_lang);
+		$this->db->where('language_id', $lang_id);
 		$this->db->where('user_id', $id);
 		$this->db->where('is_pos_only', 0);
 		$this->db->where('status', 1);

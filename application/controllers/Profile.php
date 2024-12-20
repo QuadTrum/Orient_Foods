@@ -124,6 +124,7 @@ class Profile extends MY_Controller
             $data['all_items'] = $this->admin_m->get_all_items_by_user_ln($id, $packageItem_limit = 0, product_limit($id));
             $data['cat_list'] = $this->common_m->get_my_categories($id, site_lang(), $packageItem_limit = 0);
         } else {
+           
             $data['all_items'] = $this->admin_m->get_all_items_by_user($id, $packageItem_limit = 0, product_limit($id));
             $data['cat_list'] = $this->admin_m->get_my_menu_type($id, $packageItem_limit = 0);
         }
@@ -198,6 +199,7 @@ class Profile extends MY_Controller
 
     public function single($slug = '', $cat_id = '')
     {
+        // var_dump('hello').die();
         $slug = custom_domain($this->url, $slug);
 
         $data = array();

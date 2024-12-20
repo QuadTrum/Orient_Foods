@@ -5034,6 +5034,11 @@ class Admin_m extends CI_Model
 
     public function get_all_items_by_user_ln($id, $limit = 0, $item_limit = 8, $isHome = 0)
     {
+        $lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $this->site_lang)
+            ->get()
+            ->row('id');
         $this->db->select('mt.*');
         $this->db->from('menu_type mt');
         $this->db->where('user_id', $id);
@@ -5041,7 +5046,7 @@ class Admin_m extends CI_Model
             $this->db->limit($limit);
         }
         $this->db->where('mt.status', 1);
-        $this->db->where('mt.language', $this->site_lang);
+        $this->db->where('mt.language_id', $lang_id);
         $this->db->where('mt.is_pos_only', 0);
         $this->db->order_by('orders', 'ASC');
         $query = $this->db->get();
@@ -5067,7 +5072,7 @@ class Admin_m extends CI_Model
             $this->db->select('i.*,i.id as item_id,a.name as allergen');
             $this->db->from('items i');
             $this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
-            $this->db->where('i.language', $this->site_lang);
+            $this->db->where('i.language_id', $lang_id);
             $this->db->where('i.cat_id', $cat_id);
             $this->db->where('i.user_id', $value['user_id']);
             $this->db->where('i.status', 1);
@@ -6150,7 +6155,7 @@ class Admin_m extends CI_Model
         return $this->db->insert_id();
     }
 
-     //preferred language for admin
+    //preferred language for admin
 
     // public function preferred_language($user_id, $language)
     // {
@@ -6160,21 +6165,20 @@ class Admin_m extends CI_Model
 
     // langauge and faq relation
     public function get_faq_with_language()
-{
-    $this->db->select('faq.*, languages.lang_name as language_name');
-    $this->db->from('faq');
-    $this->db->join('languages', 'faq.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
-    $query = $this->db->get();
-    return $query->result_array();
-}
+    {
+        $this->db->select('faq.*, languages.lang_name as language_name');
+        $this->db->from('faq');
+        $this->db->join('languages', 'faq.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
-public function get_manual_reviews()
-{
-    $this->db->select('manual_reviews.*, languages.lang_name as language_name');
-    $this->db->from('manual_reviews');
-    $this->db->join('languages', 'manual_reviews.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
-    $query = $this->db->get();
-    return $query->result_array();
-}
-
+    public function get_manual_reviews()
+    {
+        $this->db->select('manual_reviews.*, languages.lang_name as language_name');
+        $this->db->from('manual_reviews');
+        $this->db->join('languages', 'manual_reviews.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }

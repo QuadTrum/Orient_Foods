@@ -25,52 +25,53 @@ class Menu extends MY_Controller
 		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['all_items'] = $this->admin_m->get_all_items_ln('0', $_GET['lang'] ?? site_lang());
-		$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-	else :
-		$data['all_items'] = $this->admin_m->get_all_items('0');
-		$data['menu_type'] = $this->admin_m->get_my_categories();
-	endif;
-	$data['main_content'] = $this->load->view('backend/menu/items', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['all_items'] = $this->admin_m->get_all_items('0');
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['main_content'] = $this->load->view('backend/menu/items', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 
-public function item_list($id)
-{
-	$data = array();
-	$data['page_title'] = "Items";
-	$data['page'] = "Menu";
-	$data['is_create'] = 0;
-	$data['data'] = false;
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['all_items'] = $this->admin_m->get_all_items_ln($id, $_GET['lang'] ?? site_lang());
-else :
-	$data['all_items'] = $this->admin_m->get_all_items($id);
-endif;
+	public function item_list($id)
+	{
+		$data = array();
+		$data['page_title'] = "Items";
+		$data['page'] = "Menu";
+		$data['is_create'] = 0;
+		$data['data'] = false;
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['all_items'] = $this->admin_m->get_all_items_ln($id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['all_items'] = $this->admin_m->get_all_items($id);
+		endif;
 
-$data['main_content'] = $this->load->view('backend/menu/item_list', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
+		$data['main_content'] = $this->load->view('backend/menu/item_list', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 
-public function create_item()
-{
-	$data = array();
-	$data['page_title'] = "Items";
-	$data['page'] = "Menu";
-	$data['data'] = false;
-	$data['is_create'] = 1;
-	$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['all_items'] = $this->admin_m->get_all_items_ln('0', $_GET['lang'] ?? site_lang());
-	$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-else :
-	$data['all_items'] = $this->admin_m->get_all_items('0');
-	$data['menu_type'] = $this->admin_m->get_my_categories();
-endif;
-$data['main_content'] = $this->load->view('backend/menu/create_items', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
+	public function create_item()
+	{
+		$data = array();
+		$data['page_title'] = "Items";
+		$data['page'] = "Menu";
+		$data['data'] = false;
+		$data['is_create'] = 1;
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['all_items'] = $this->admin_m->get_all_items_ln('0', $_GET['lang'] ?? site_lang());
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['all_items'] = $this->admin_m->get_all_items('0');
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['main_content'] = $this->load->view('backend/menu/create_items', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 
 	/**
@@ -79,9 +80,11 @@ $this->load->view('backend/index', $data);
 
 	public function edit_item($id)
 	{
+		// var_dump($id).die();
 		$data = array();
 		$data['page_title'] = "Items";
 		$data['page'] = "Menu";
+		$data['languages'] = $this->admin_m->select('languages');
 		$data['data_type'] = false;
 		$data['data'] = $this->admin_m->single_select_by_auth_id($id, 'items');
 		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
@@ -92,186 +95,154 @@ $this->load->view('backend/index', $data);
 		endif;
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-	else :
-		$data['menu_type'] = $this->admin_m->get_my_categories();
-	endif;
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
 
 
-	$data['main_content'] = $this->load->view('backend/menu/create_items', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
+		$data['main_content'] = $this->load->view('backend/menu/create_items', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 	/**
 	 *** add items
 	 **/
+
 	public function add_items()
 	{
-
 		is_test();
+
+		// Fetch available languages
+		$languages = $this->admin_m->select('languages'); // Assuming you have a method to fetch available languages
+		$default_lang_slug = $this->input->post('default_language', TRUE);
+		if (empty($default_lang_slug)) {
+			$default_lang_slug = 'english';
+		}
+
 		$is_size_check = $this->input->post('is_size', true);
 		$img_type = $this->input->post('img_type', true);
+
+		foreach ($languages as $lang) {
+			$rules = ($lang['slug'] === $default_lang_slug) ? 'trim|xss_clean' : 'trim|xss_clean';
+			$this->form_validation->set_rules('title[' . $lang['slug'] . ']', 'Title (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('overview[' . $lang['slug'] . ']', 'Small Description', $rules);
+			$this->form_validation->set_rules('details[' . $lang['slug'] . ']', 'Details (' . $lang['lang_name'] . ')', $rules);
+		}
+
 		$this->form_validation->set_rules('cat_id', lang('category'), 'trim|required|xss_clean');
-		$this->form_validation->set_rules('title', lang('title'), 'trim|required|xss_clean');
-		$this->form_validation->set_rules('overview', 'Small Description', 'trim|xss_clean');
 		$this->form_validation->set_rules('veg_type', 'Veg Type', 'trim|xss_clean');
 		$this->form_validation->set_rules('allergen_id[]', 'Allergen', 'trim|xss_clean');
 		$this->form_validation->set_rules('in_stock', 'In stock', 'trim|xss_clean');
 		if ($img_type == 2) {
 			$this->form_validation->set_rules('img_url', 'Image URL', 'trim|xss_clean|required');
 		}
-		if (!isset($is_size_check)) :
+		if (!isset($is_size_check)) {
 			$this->form_validation->set_rules('price', 'Price', 'required|trim|callback_number_check|xss_clean');
-		endif;
-		$this->form_validation->set_rules('details', 'Details', 'trim');
+		}
+
 		if ($this->form_validation->run() == FALSE) {
 			__request(validation_errors(), 0, '');
 		} else {
 			$id = $this->input->post('id');
-			if ($id == 0) :
-				if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-					$total = $this->admin_m->check_limit_by_table_ln('items');
-			else :
-				$total = $this->admin_m->check_limit_by_table('items');
-			endif;
+			$veg_type = $this->input->post('veg_type', true);
+			$cat_id = $this->input->post('cat_id', true);
+			$language = $this->input->post('language', true);
+			$uid = $_ENV['ID'] . random_string('numeric', 4);
+			$title = $this->input->post('title', TRUE);
+			$details = $this->input->post('details', TRUE);
+			$overview = $this->input->post('overview', TRUE);
 
-			$limit = limit(auth('id'), 1);
-			if ($limit != 0) {
-				$total_up = $total + 1;
-
-				if ($total_up > $limit) {
-					$check = 0;
-					__request('Sorry You Uploaded maximum Items', 0, base_url('admin/menu/item'));
-					exit();
-				} else if ($total > $limit) {
-					$check = 0;
-					__request(__('you_reached_max_limit'), 0, base_url('admin/menu/item'));
-					exit();
-				} else {
-					$check = 1;
-				}
+			if (isset($is_size_check) && $is_size_check == 1) {
+				$is_size = 1;
+				$price = json_encode(['variant_name' => $_POST['variant_name'], 'variant_options' => $_POST['variants']]);
 			} else {
-					$check = 1; // for unlimited
+				$is_size = 0;
+				$price = $this->input->post('price', true);
+			}
+
+			$is_feature = $this->input->post('is_features');
+			$previous_price = $this->input->post('previous_price');
+			$n = $this->db->where(['shop_id' => restaurant()->id])->count_all_results('items');
+
+			if (__sub() == 1) {
+				$sub_category_id = $this->input->post('sub_category_id', true);
+			} else {
+				$sub_category_id = 0;
+			}
+
+			// Prepare common data for all translations
+			$common_data = [
+				'cat_id' => $cat_id,
+				'sub_category_id' => $sub_category_id,
+				'allergen_id' => json_encode($this->input->post('allergen_id[]')),
+				'veg_type' => isset($veg_type) && !empty($veg_type) ? $veg_type : 0,
+				'user_id' => auth('id'),
+				'shop_id' => restaurant()->id,
+				'tax_fee' => $this->input->post('tax_fee', true) ?? 0,
+				'tax_status' => $this->input->post('tax_status', true) ?? 0,
+				'in_stock' => !empty($this->input->post('in_stock')) ? $this->input->post('in_stock') : 0,
+				'is_features' => isset($is_feature) ? 1 : 0,
+				'price' => $price,
+				'previous_price' => isset($previous_price) ? $previous_price : 0,
+				'img_type' => $img_type,
+				'img_url' => $this->input->post('img_url', true),
+				'is_size' => $is_size,
+				'created_at' => d_time(),
+				'language' => $language ?? 'english',
+				'is_pos_only' => isset($_POST['is_pos_only']) ? $_POST['is_pos_only'] : 0,
+			];
+
+			// Handle item insertion or updating for translations
+			foreach ($languages as $lang) {
+				if ($lang['slug'] !== $default_lang_slug && empty($title[$lang['slug']]) && empty($details[$lang['slug']]) && empty($overview[$lang['slug']])) {
+					continue;
 				}
-			else :
-				$check = 1;
-			endif;
-
-
-			if ($check == 1) :
-
-				$veg_type = $this->input->post('veg_type', true);
-
-				if (isset($is_size_check) && $is_size_check == 1) :
-					$is_size = 1;
-					$price = json_encode(['variant_name' => $_POST['variant_name'], 'variant_options' => $_POST['variants']]);
-				else :
-					$is_size = 0;
-					$price = $this->input->post('price', true);
-				endif;
-				$is_feature = $this->input->post('is_features');
-				$previous_price = $this->input->post('previous_price');
-				$cat_id = $this->input->post('cat_id', true);
-				$language = $this->input->post('language', true);
-				$uid = $_ENV['ID'] . random_string('numeric', 4);
-
-				$n = $this->db->where(['shop_id' => restaurant()->id])->count_all_results('items');
-				
-				if (__sub() == 1) {
-					$sub_category_id = $this->input->post('sub_category_id', true);
-				} else {
-					$sub_category_id = 0;
-				}
-
-				$data = array(
-					'cat_id' => $cat_id,
-					'sub_category_id' => $sub_category_id,
-					'title' => $this->input->post('title', true),
-					'allergen_id' => json_encode($this->input->post('allergen_id[]')),
-					'veg_type' => isset($veg_type) && !empty($veg_type) ? $veg_type : 0,
-					'user_id' => auth('id'),
-					'shop_id' => restaurant()->id,
-					'overview' => $this->input->post('overview'),
-					'details' => $this->input->post('details'),
-					'tax_fee' => $this->input->post('tax_fee', true) ?? 0,
-					'tax_status' => $this->input->post('tax_status', true) ?? 0,
-					'in_stock' => !empty($this->input->post('in_stock')) ? $this->input->post('in_stock') : 0,
-					'is_features' => isset($is_feature) ? 1 : 0,
-					'price' => $price,
-					'previous_price' => isset($previous_price) ? $previous_price : 0,
-					'img_type' => $img_type,
-					'img_url' => $this->input->post('img_url', true),
-					'is_size' => $is_size,
-					'created_at' => d_time(),
-					'language' => $language ?? 'english',
-					'is_pos_only' => isset($_POST['is_pos_only']) ? $_POST['is_pos_only'] : 0,
-				);
-
-				$catData = [
-					'shop_id' => restaurant()->id,
-					'user_id' => auth('id'),
-					'uid' => $uid ?? time() . random_string('numeric', 3),
+				$translation_data = [
+					'title' => $this->input->post('title[' . $lang['slug'] . ']', true),
+					'overview' => $this->input->post('overview[' . $lang['slug'] . ']', true),
+					'details' => $this->input->post('details[' . $lang['slug'] . ']', true),
+					'language_id' => $lang['id'], // Store the language ID for this translation
 				];
 
-				$is_copy_extras = $this->input->post('is_copy_extra');
-				$is_copy = $this->input->post('is_copy');
+				if (empty($translation_data['title']) && empty($translation_data['overview'])) {
+					continue; // Skip the insertion or update if both title and overview are empty
+				}
 
-				if (isset($is_copy) && $is_copy == 1) {
-					$insert = $this->admin_m->insert($data, 'items');
-					if ($img_type == 1) :
-						$img_data = array(
-							'images' => $this->input->post('images'),
-							'thumb' => $this->input->post('thumb'),
-						);
-
-						$this->admin_m->update($img_data, $insert, 'items');
-					endif;
+				if ($id == 0) {
+					// New item, insert translations
+					if ($lang['slug'] == $default_lang_slug) {
+						$item_id = $this->admin_m->insert(['shop_id' => restaurant()->id, 'user_id' => auth('id'), 'uid' => $uid ?? time() . random_string('numeric', 3)], 'item_list');
+					}
+					$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $item_id, 'uid' => $uid ?? time() . random_string('numeric', 3), 'orders' => $n + 1]), 'items');
 				} else {
-					if ($id == 0) {
-						$item_id = $this->admin_m->insert($catData, 'item_list');
-						$insert = $this->admin_m->insert(array_merge(['item_id' => $item_id ?? 0, 'uid' => $uid ?? time() . random_string('numeric', 3), 'orders' => $n + 1], $data), 'items');
+
+					// Existing item, update or insert translations
+					$existing_translation = $this->db->where(['id' => $id, 'language_id' => $lang['id']])->get('items')->row_array();
+
+					if ($existing_translation) {
+						$this->admin_m->update(array_merge($common_data, $translation_data, ['item_id' => $existing_translation['item_id']]), $existing_translation['id'], 'items');
 					} else {
-						$insert = $this->admin_m->update($data, $id, 'items');
+						$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $existing_translation['item_id']]), 'items');
 					}
 				}
+			}
 
-				if ($insert) {
-					$ex_data = $ex_title_data = $extra_title_ids = $extra_items=[];
-					if (isset($is_copy_extras) && $is_copy_extras == 1) {
-						$extra_title = $this->admin_m->get_extra_title($id, restaurant()->id);
-						$item_extras = $this->admin_m->get_extras($id, restaurant()->id);
-
-						if (sizeof($extra_title) > 0) {
-							$new_item_id = ['item_id' => $insert, 'created_at' => d_time()];
-							foreach ($extra_title as $key => $t) {
-								$extra_items = $this->admin_m->get_extras_by_title_id($t['id'],restaurant()->id);
-								$mergeArr = array_merge($t, $new_item_id);
-								array_splice($mergeArr, 0, 1);
-								$last_title_id = $this->admin_m->insert($mergeArr, 'extra_title_list');
-								$this->add_extra_items($extra_items,$last_title_id,$insert);
-							}
-
-						}
-
-					}
-
-					
-					$this->upload_m->upload_img($insert, 'items');
-					$this->upload_m->croped($insert, 'items');
-					__request(lang('success_text'), 1, base_url('admin/menu/item_list/' . $cat_id));
-				} else {
-					__request(lang('error_text'), 0, base_url('admin/menu/item_list/' . $cat_id));
-				}
-			endif; //end check
+			// Handle uploads
+			$this->upload_m->upload_img($id ?? $item_id, 'items');
+			$this->upload_m->croped($id ?? $item_id, 'items');
+			__request(lang('success_text'), 1, base_url('admin/menu/item_list/' . $cat_id));
 		}
 	}
 
-	protected function add_extra_items($item_extras,$extra_id,$insert){
+
+	protected function add_extra_items($item_extras, $extra_id, $insert)
+	{
 		if (sizeof($item_extras) > 0) :
 			foreach ($item_extras as $key => $value) {
-				$order_list_arr = ['item_id' => $insert,'extra_title_id' => $extra_id];
+				$order_list_arr = ['item_id' => $insert, 'extra_title_id' => $extra_id];
 				$parray = array_merge($value, $order_list_arr);
 				array_splice($parray, 0, 1);
-				$this->admin_m->insert($parray,'item_extras');
+				$this->admin_m->insert($parray, 'item_extras');
 			}
 		endif;
 	}
@@ -411,79 +382,81 @@ $this->load->view('backend/index', $data);
 		$data['allergens'] = $this->admin_m->select_all_by_user('allergens');
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-	else :
-		$data['menu_type'] = $this->admin_m->get_my_categories();
-	endif;
-	$data['sizes'] = $this->admin_m->select_all_by_user('item_sizes');
-	$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['sizes'] = $this->admin_m->select_all_by_user('item_sizes');
+		$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
-public function create_category()
-{
-	$data = array();
-	$data['page_title'] = "Category";
-	$data['page'] = "Menu";
-	$data['is_create'] = true;
-	$data['is_size'] = False;
-	$data['is_lang'] = 0;
-	$data['data'] = false;
-	$data['allergens'] = $this->admin_m->select_all_by_user('allergens');
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-else :
-	$data['menu_type'] = $this->admin_m->get_my_categories();
-endif;
-$data['sizes'] = $this->admin_m->select_all_by_user('item_sizes');
-$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
+	public function create_category()
+	{
+		$data = array();
+		$data['page_title'] = "Category";
+		$data['page'] = "Menu";
+		$data['is_create'] = true;
+		$data['is_size'] = False;
+		$data['is_lang'] = 0;
+		$data['data'] = false;
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['allergens'] = $this->admin_m->select_all_by_user('allergens');
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['sizes'] = $this->admin_m->select_all_by_user('item_sizes');
+		$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 
-public function edit_category($id)
-{
-	$data = array();
-	$data['page_title'] = "Category";
-	$data['is_create'] = true;
-	$data['is_size'] = False;
-	$data['is_lang'] = 0;
-	$data['is_edit'] = 1;
-	$data['page'] = "Menu";
-	$data['data'] = $this->admin_m->single_select_by_auth_id($id, 'menu_type');
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-else :
-	$data['menu_type'] = $this->admin_m->get_my_categories();
-endif;
-if (empty($data['data'])) :
-	valid_user($data['data']['user_id']);
-endif;
-$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
+	public function edit_category($id)
+	{
+		$data = array();
+		$data['page_title'] = "Category";
+		$data['is_create'] = true;
+		$data['is_size'] = False;
+		$data['is_lang'] = 0;
+		$data['is_edit'] = 1;
+		$data['languages'] = $this->admin_m->select('languages');
+		$data['page'] = "Menu";
+		$data['data'] = $this->admin_m->single_select_by_auth_id($id, 'menu_type');
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		if (empty($data['data'])) :
+			valid_user($data['data']['user_id']);
+		endif;
+		$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
-public function clone_category($id)
-{
-	is_test();
-	$data = array();
-	$data['page_title'] = "Category";
-	$data['is_create'] = true;
-	$data['is_size'] = False;
-	$data['is_clone'] = TRUE;
-	$data['is_lang'] = 1;
-	$data['page'] = "Menu";
-	$data['data'] = $this->admin_m->single_select_by_cat_id($id, 'menu_type');;
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-else :
-	$data['menu_type'] = $this->admin_m->get_my_categories();
-endif;
-if (empty($data['data'])) :
-	valid_user($data['data']['user_id']);
-endif;
-$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
+	public function clone_category($id)
+	{
+		is_test();
+		$data = array();
+		$data['page_title'] = "Category";
+		$data['is_create'] = true;
+		$data['is_size'] = False;
+		$data['is_clone'] = TRUE;
+		$data['is_lang'] = 1;
+		$data['page'] = "Menu";
+		$data['data'] = $this->admin_m->single_select_by_cat_id($id, 'menu_type');;
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		if (empty($data['data'])) :
+			valid_user($data['data']['user_id']);
+		endif;
+		$data['main_content'] = $this->load->view('backend/menu/category', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 	/**
 	 *** add_portfolio_type
@@ -491,17 +464,33 @@ $this->load->view('backend/index', $data);
 	public function add_category()
 	{
 		is_test();
-		$this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
+
+		$languages = $this->admin_m->select('languages');  // Assuming you have a method to fetch available languages
+		$default_lang_slug = $this->input->post('default_language', TRUE);
+		if (empty($default_lang_slug)) {
+			$default_lang_slug = 'english';
+		}
+
+		foreach ($languages as $lang) {
+			// Make the default language required, others optional
+			$rules = ($lang['slug'] === $default_lang_slug) ? 'trim|required|xss_clean' : 'trim|xss_clean';
+			$this->form_validation->set_rules('name[' . $lang['slug'] . ']', 'Name(' . $lang['lang_name'] . ')', $rules);
+		}
+		// $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
 			redirect(base_url('admin/menu/category'));
 		} else {
 
 			$language = $this->input->post('language', true);
-			$data = array(
-				'name' => $this->input->post('name', true),
+			$title = $this->input->post('name', TRUE);
+			$details = $this->input->post('details', TRUE);
+			$id = $this->input->post('id');
+			$default_cat_id = $this->input->post('default_cat_id');
+			$is_clone = $this->input->post('is_clone');
+			$insert = false;
+			$commonData = array(
 				'type' => $this->input->post('type', true) ?? 'others',
-				'details' => $this->input->post('details', true),
 				'orders' => $this->input->post('orders', true),
 				'language' => $language ?? 'english',
 				'user_id' => auth('id'),
@@ -514,65 +503,101 @@ $this->load->view('backend/index', $data);
 				'shop_id' => restaurant()->id,
 				'user_id' => auth('id'),
 			];
+			if (isset($default_lang_slug)) {
+				if ($default_cat_id == 0) {
+					// Insert the main category for the default language only
+					$cat_id = $this->admin_m->insert($catData, 'item_category_list');
+				}
+			}
+			foreach ($languages as $lang) {
+				// Skip empty translations for non-default languages
+				if ($lang['slug'] !== $default_lang_slug && empty($title[$lang['slug']]) && empty($details[$lang['slug']])) {
+					continue;
+				}
 
+				// Prepare translation data
+				$translationData = array(
+					'name' => isset($title[$lang['slug']]) ? $title[$lang['slug']] : '',
+					'details' => isset($details[$lang['slug']]) ? $details[$lang['slug']] : '',
+					'language_id' => $lang['id'], // Store the language ID
+				);
+				if ($id == 0) {
+					// var_dump($cat_id).die();
+					// Insert translation with the same category ID
+					$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $cat_id]), 'menu_type');
+				} else {
+					// Update existing category or clone
+					if (isset($is_clone) && $is_clone == 1 && isset($language) && $language != 'english') {
+						$cat_info = $this->admin_m->single_select_by_id($id, 'menu_type');
+						$insert = $this->admin_m->insert(
+							array_merge(
+								['category_id' => $cat_info['category_id'], 'thumb' => $cat_info['thumb'], 'images' => $cat_info['images']],
+								$commonData,
+								$translationData
+							),
+							'menu_type'
+						);
+					} else {
+						$existing_translation = $this->db->where(['id' => $id, 'language_id' => $lang['id']])->get('menu_type')->row_array();
 
-			$id = $this->input->post('id');
-			$is_clone = $this->input->post('is_clone');
-			if ($id == 0) {
-				$cat_id = $this->admin_m->insert($catData, 'item_category_list');
-				$insert = $this->admin_m->insert(array_merge(['category_id' => $cat_id], $data), 'menu_type');
+						if ($existing_translation) {
+							$insert = $this->admin_m->update(array_merge($commonData, $translationData, ['category_id' => $existing_translation['category_id']]), $existing_translation['id'], 'menu_type');
+						} else {
+
+							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id]), 'menu_type');
+						}
+						// Update the translation
+						// $insert = $this->admin_m->update(
+						// 	array_merge($commonData, $translationData),
+						// 	$id,
+						// 	'menu_type'
+						// );
+					}
+				}
+			}
+
+			if ($insert) {
+				$this->upload_m->upload_img($insert, 'menu_type');
+				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+				redirect(base_url('admin/menu/category'));
 			} else {
-
-				if (isset($is_clone) && $is_clone == 1 && isset($language) && $language != 'english') :
-					$cat_info = $this->admin_m->single_select_by_id($id, 'menu_type');
-				$insert = $this->admin_m->insert(array_merge(['category_id' => $cat_info['category_id'], 'thumb' => $cat_info['thumb'], 'images' => $cat_info['images']], $data), 'menu_type');
-			else :
-				$insert = $this->admin_m->update($data, $id, 'menu_type');
-			endif;
+				$this->session->set_flashdata('error', !empty(lang('error_text')) ? lang('error_text') : 'Somethings Were Wrong!!');
+				redirect(base_url('admin/menu/category'));
+			}
 		}
+	}
 
-		if ($insert) {
-			$this->upload_m->upload_img($insert, 'menu_type');
-			$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
-			redirect(base_url('admin/menu/category'));
+
+	public function number_check($val)
+	{
+		if (!preg_match('/^[0-9]+(\\.[0-9]+)?$/', $val)) {
+			$this->form_validation->set_message('number_check', 'The {field} field must be a number or decimal.');
+			return FALSE;
 		} else {
-			$this->session->set_flashdata('error', !empty(lang('error_text')) ? lang('error_text') : 'Somethings Were Wrong!!');
-			redirect(base_url('admin/menu/category'));
+			return TRUE;
 		}
 	}
-}
-
-
-public function number_check($val)
-{
-	if (!preg_match('/^[0-9]+(\\.[0-9]+)?$/', $val)) {
-		$this->form_validation->set_message('number_check', 'The {field} field must be a number or decimal.');
-		return FALSE;
-	} else {
-		return TRUE;
+	public function allergens()
+	{
+		$data = array();
+		$data['page_title'] = "Allergens";
+		$data['page'] = "Menu";
+		$data['data'] = false;
+		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
+		$data['main_content'] = $this->load->view('backend/menu/allergens', $data, TRUE);
+		$this->load->view('backend/index', $data);
 	}
-}
-public function allergens()
-{
-	$data = array();
-	$data['page_title'] = "Allergens";
-	$data['page'] = "Menu";
-	$data['data'] = false;
-	$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
-	$data['main_content'] = $this->load->view('backend/menu/allergens', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
 
-public function edit_allergen($id)
-{
-	$data = array();
-	$data['page_title'] = "Allergens";
-	$data['page'] = "Menu";
-	$data['data'] = $this->admin_m->single_select_by_id($id, 'allergens');
-	$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
-	$data['main_content'] = $this->load->view('backend/menu/allergens', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
+	public function edit_allergen($id)
+	{
+		$data = array();
+		$data['page_title'] = "Allergens";
+		$data['page'] = "Menu";
+		$data['data'] = $this->admin_m->single_select_by_id($id, 'allergens');
+		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
+		$data['main_content'] = $this->load->view('backend/menu/allergens', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
 	/**
 	 *** add allergen
@@ -1522,84 +1547,84 @@ public function edit_allergen($id)
 		$data['data'] = false;
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-	else :
-		$data['menu_type'] = $this->admin_m->get_my_categories();
-	endif;
-	$data['sub_category_list'] = $this->admin_m->get_my_sub_categories();
-	$data['main_content'] = $this->load->view('backend/menu/subcategory/home', $data, TRUE);
-	$this->load->view('backend/index', $data);
-}
-
-public function edit_sub_category($id)
-{
-
-	$data = array();
-	$data['page_title'] = "Sub Category";
-	$data['page'] = "Menu";
-	$data['data'] = $this->admin_m->single_select_by_id($id, 'sub_category_list');
-	if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
-		$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-else :
-	$data['menu_type'] = $this->admin_m->get_my_categories();
-endif;
-$data['sub_category_list'] = $this->admin_m->get_my_sub_categories();
-$data['main_content'] = $this->load->view('backend/menu/subcategory/home', $data, TRUE);
-$this->load->view('backend/index', $data);
-}
-
-public function get_subcategories($id)
-{
-
-	$subcatlist = $this->admin_m->get_subcategories_by_cat_id($id, $_ENV['ID']);
-	$data = '';
-	if (sizeof($subcatlist) > 0) {
-		foreach ($subcatlist as $value) {
-			$data .= "<option value= '{$value['id']}'> {$value['sub_category_name']} </option>";
-		}
-	} else {
-		$data = '<option value="">' . lang("not_found") . '</option>';
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['sub_category_list'] = $this->admin_m->get_my_sub_categories();
+		$data['main_content'] = $this->load->view('backend/menu/subcategory/home', $data, TRUE);
+		$this->load->view('backend/index', $data);
 	}
 
-	echo json_encode(['data' => $data]);
-}
-public function add_sub_category()
-{
-	is_test();
-	$this->form_validation->set_rules('category_id', 'Category Name', 'trim|required|xss_clean');
-	$this->form_validation->set_rules('sub_category_name', 'Name', 'trim|required|xss_clean');
-	if ($this->form_validation->run() == FALSE) {
-		$this->session->set_flashdata('error', validation_errors());
-		redirect(base_url('admin/menu/sub_category'));
-	} else {
+	public function edit_sub_category($id)
+	{
 
-		$language = $this->input->post('language', true);
-		$data = array(
-			'sub_category_name' => $this->input->post('sub_category_name', true),
-			'category_id' => $this->input->post('category_id', true),
-			'orders' => $this->input->post('orders', true),
-			'language' => $language ?? site_lang(),
-			'user_id' => auth('id'),
-			'shop_id' => restaurant()->id,
-			'created_at' => d_time(),
-		);
+		$data = array();
+		$data['page_title'] = "Sub Category";
+		$data['page'] = "Menu";
+		$data['data'] = $this->admin_m->single_select_by_id($id, 'sub_category_list');
+		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
+			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+		else :
+			$data['menu_type'] = $this->admin_m->get_my_categories();
+		endif;
+		$data['sub_category_list'] = $this->admin_m->get_my_sub_categories();
+		$data['main_content'] = $this->load->view('backend/menu/subcategory/home', $data, TRUE);
+		$this->load->view('backend/index', $data);
+	}
 
+	public function get_subcategories($id)
+	{
 
-		$id = $this->input->post('id');
-		$is_clone = $this->input->post('is_clone');
-		if ($id == 0) {
-			$insert = $this->admin_m->insert($data, 'sub_category_list');
+		$subcatlist = $this->admin_m->get_subcategories_by_cat_id($id, $_ENV['ID']);
+		$data = '';
+		if (sizeof($subcatlist) > 0) {
+			foreach ($subcatlist as $value) {
+				$data .= "<option value= '{$value['id']}'> {$value['sub_category_name']} </option>";
+			}
 		} else {
-			$insert = $this->admin_m->update($data, $id, 'sub_category_list');
+			$data = '<option value="">' . lang("not_found") . '</option>';
 		}
 
-		if ($insert) {
-			$this->upload_m->upload_img($insert, 'sub_category_list');
-			$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+		echo json_encode(['data' => $data]);
+	}
+	public function add_sub_category()
+	{
+		is_test();
+		$this->form_validation->set_rules('category_id', 'Category Name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('sub_category_name', 'Name', 'trim|required|xss_clean');
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('error', validation_errors());
 			redirect(base_url('admin/menu/sub_category'));
 		} else {
-			$this->session->set_flashdata('error', !empty(lang('error_text')) ? lang('error_text') : 'Somethings Were Wrong!!');
-			redirect(base_url('admin/menu/sub_category'));
+
+			$language = $this->input->post('language', true);
+			$data = array(
+				'sub_category_name' => $this->input->post('sub_category_name', true),
+				'category_id' => $this->input->post('category_id', true),
+				'orders' => $this->input->post('orders', true),
+				'language' => $language ?? site_lang(),
+				'user_id' => auth('id'),
+				'shop_id' => restaurant()->id,
+				'created_at' => d_time(),
+			);
+
+
+			$id = $this->input->post('id');
+			$is_clone = $this->input->post('is_clone');
+			if ($id == 0) {
+				$insert = $this->admin_m->insert($data, 'sub_category_list');
+			} else {
+				$insert = $this->admin_m->update($data, $id, 'sub_category_list');
+			}
+
+			if ($insert) {
+				$this->upload_m->upload_img($insert, 'sub_category_list');
+				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+				redirect(base_url('admin/menu/sub_category'));
+			} else {
+				$this->session->set_flashdata('error', !empty(lang('error_text')) ? lang('error_text') : 'Somethings Were Wrong!!');
+				redirect(base_url('admin/menu/sub_category'));
+			}
 		}
 	}
-}
 }
