@@ -1271,7 +1271,7 @@ class Menu extends MY_Controller
 
 		// Write the UTF-8 BOM (Byte Order Mark) to the file
 		fwrite($temp_file, "\xEF\xBB\xBF");
-		$columnNames = ['language', 'title', 'images', 'thumb', 'price', 'overview', 'details', 'is_features', 'status', 'in_stock', 'tax_fee', 'veg_type', 'img_type', 'img_url'];
+		$columnNames = ['uid','language', 'title', 'images', 'thumb', 'price', 'overview', 'details', 'is_features', 'status', 'in_stock', 'tax_fee', 'veg_type', 'img_type', 'img_url'];
 		fputcsv($temp_file, $columnNames);
 		// Loop through the data and write each row to the file
 
@@ -1316,6 +1316,7 @@ class Menu extends MY_Controller
 	public function exportcvs($language)
 	{
 		$data[] = array(
+			'uid' => '',
 			'language' => $language,
 			'title' => '',
 			'images' => '',
@@ -1336,49 +1337,163 @@ class Menu extends MY_Controller
 
 
 
+	// public function import($category_id)
+	// {
+
+
+	// 	is_test();
+	// 	if (isset($category_id) && empty($category_id)) {
+	// 		$this->session->set_flashdata('error', lang('error_text'));
+	// 		redirect($_SERVER['HTTP_REFERER']);
+	// 		exit();
+	// 	}
+
+	// 	$csvMimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
+	// 	if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $csvMimes)) {
+
+	// 		if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+	// 			//open uploaded csv file with read only mode
+	// 			$csvFile = fopen($_FILES['file']['tmp_name'], 'r');
+
+
+	// 			$header = fgetcsv($csvFile); //skip first row
+
+	// 			// Import the CSV file
+	// 			while (($row = fgetcsv($csvFile)) !== FALSE) {
+	// 				$language = $row[0];
+	// 				$title = $row[1];
+	// 				$images = $row[2];
+	// 				$thumb = $row[3];
+	// 				$price = $row[4];
+	// 				$overview = $row[5];
+	// 				$details = $row[6];
+	// 				$is_features = $row[7];
+	// 				$status = $row[8];
+	// 				$in_stock = $row[9];
+	// 				$tax_fee = $row[10];
+	// 				$veg_type = $row[11];
+	// 				$img_type = $row[12];
+	// 				$img_url = $row[13];
+
+
+	// 				$data = array(
+	// 					'shop_id' => restaurant()->id,
+	// 					'user_id' => auth('id'),
+	// 					'cat_id' => $category_id,
+	// 					'language' => $language,
+	// 					'title' => $title,
+	// 					'images' => $images,
+	// 					'thumb' => $thumb,
+	// 					'price' => $price,
+	// 					'overview' => $overview,
+	// 					'details' => $details,
+	// 					'is_features' => $is_features,
+	// 					'status' => $status,
+	// 					'in_stock' => $in_stock,
+	// 					'tax_fee' => $tax_fee,
+	// 					'veg_type' => $veg_type,
+	// 					'img_type' => $img_type,
+	// 					'img_url' => $img_url,
+	// 				);
+	// 				$insert = $this->admin_m->insert($data, 'items');
+	// 			}
+
+	// 			//close opened csv file
+	// 			fclose($csvFile);
+	// 			if ($insert) {
+	// 				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+	// 				redirect($_SERVER['HTTP_REFERER']);
+	// 			}
+	// 		} else {
+	// 			$this->session->set_flashdata('error', lang('error_text'));
+	// 			redirect($_SERVER['HTTP_REFERER']);
+	// 		}
+	// 	} else {
+	// 		$this->session->set_flashdata('error', 'Invalid File');
+	// 		redirect($_SERVER['HTTP_REFERER']);
+	// 	}
+	// }
+
 	public function import($category_id)
 	{
-
-
 		is_test();
 		if (isset($category_id) && empty($category_id)) {
 			$this->session->set_flashdata('error', lang('error_text'));
 			redirect($_SERVER['HTTP_REFERER']);
 			exit();
 		}
-
+	
 		$csvMimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
 		if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $csvMimes)) {
-
+	
 			if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-				//open uploaded csv file with read only mode
+				// Open uploaded CSV file
 				$csvFile = fopen($_FILES['file']['tmp_name'], 'r');
-
-
-				$header = fgetcsv($csvFile); //skip first row
-
+	
+				$header = fgetcsv($csvFile); // Skip the first row
+	
+				// Initialize variables for uid and item_id tracking
+				$previousUid = null;
+				$itemId = null;
+	
 				// Import the CSV file
 				while (($row = fgetcsv($csvFile)) !== FALSE) {
-					$language = $row[0];
-					$title = $row[1];
-					$images = $row[2];
-					$thumb = $row[3];
-					$price = $row[4];
-					$overview = $row[5];
-					$details = $row[6];
-					$is_features = $row[7];
-					$status = $row[8];
-					$in_stock = $row[9];
-					$tax_fee = $row[10];
-					$veg_type = $row[11];
-					$img_type = $row[12];
-					$img_url = $row[13];
-
-
+					$uid = $row[0]; // Assume UID is the first column
+					$language = $row[1];
+					$title = $row[2];
+					$images = $row[3];
+					$thumb = $row[4];
+					$price = $row[5];
+					$overview = $row[6];
+					$details = $row[7];
+					$is_features = $row[8];
+					$status = $row[9];
+					$in_stock = $row[10];
+					$tax_fee = $row[11];
+					$veg_type = $row[12];
+					$img_type = $row[13];
+					$img_url = $row[14];
+	
+					// Retrieve the language ID from the languages table
+					$languageQuery = $this->db->select('id')
+						->from('languages')
+						->where('lang_name', $language)
+						->get();
+	
+					if ($languageQuery->num_rows() > 0) {
+						$languageId = $languageQuery->row()->id;
+					} else {
+						// If language not found, you can choose to skip or set a default language ID
+						$languageId = null; // Or set a default language ID, e.g., $defaultLanguageId
+					}
+	
+					// Generate a new entry in the item_list table if uid changes
+					if ($uid !== $previousUid) {
+						// Create a unique UID for this group
+						$randomUid = uniqid();
+	
+						// Insert into item_list table
+						$itemListData = array(
+							'user_id' => auth('id'),
+							'shop_id' => restaurant()->id,
+							'status' => $status,
+							'uid' => $randomUid,
+						);
+						$this->db->insert('item_list', $itemListData);
+	
+						// Get the inserted item's primary key (item_id)
+						$itemId = $this->db->insert_id();
+	
+						// Update the previousUid tracker
+						$previousUid = $uid;
+					}
+	
+					// Prepare the data for insertion into the items table
 					$data = array(
 						'shop_id' => restaurant()->id,
 						'user_id' => auth('id'),
 						'cat_id' => $category_id,
+						'item_id' => $itemId, // Use the item_id from the item_list table
 						'language' => $language,
 						'title' => $title,
 						'images' => $images,
@@ -1393,16 +1508,18 @@ class Menu extends MY_Controller
 						'veg_type' => $veg_type,
 						'img_type' => $img_type,
 						'img_url' => $img_url,
+						'language_id' => $languageId, // Store the language ID here
 					);
-					$insert = $this->admin_m->insert($data, 'items');
+	
+					// Insert the row into the items table
+					$this->admin_m->insert($data, 'items');
 				}
-
-				//close opened csv file
+	
+				// Close the CSV file
 				fclose($csvFile);
-				if ($insert) {
-					$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
-					redirect($_SERVER['HTTP_REFERER']);
-				}
+	
+				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
+				redirect($_SERVER['HTTP_REFERER']);
 			} else {
 				$this->session->set_flashdata('error', lang('error_text'));
 				redirect($_SERVER['HTTP_REFERER']);
@@ -1412,8 +1529,7 @@ class Menu extends MY_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
-
-
+	
 
 
 	private function parse_csv_file($file_path)

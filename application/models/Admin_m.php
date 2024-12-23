@@ -2127,10 +2127,16 @@ class Admin_m extends CI_Model
 
     public function get_all_items_ln($id, $language = null)
     {
+        // var_dump($language).die();
+        $lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $language)
+            ->get()
+            ->row('id');
         $this->db->select('mt.*');
         $this->db->from('menu_type mt');
         $this->db->where('mt.user_id', auth('id'));
-        $this->db->where('mt.language', $language);
+        $this->db->where('mt.language_id', $lang_id);
         if ($id != 0) {
             $this->db->where('mt.category_id', $id);
         }
@@ -2142,7 +2148,7 @@ class Admin_m extends CI_Model
             $this->db->from('items i');
             $this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
             $this->db->where('i.cat_id', $value['category_id']);
-            $this->db->where('i.language', $language);
+            $this->db->where('i.language_id', $lang_id);
             $this->db->where('i.user_id', auth('id'));
             $this->db->order_by('i.orders', 'ASC');
             $query2 = $this->db->get();
@@ -4975,10 +4981,15 @@ class Admin_m extends CI_Model
     public function get_my_categories_ln($shop_id, $language = null)
     {
         $lang = !empty($language) ? $language : st()->language;
+        $lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $language)
+            ->get()
+            ->row('id');
         $this->db->select('mt.*');
         $this->db->from('menu_type mt');
         $this->db->where('mt.user_id', auth('id'));
-        $this->db->where('mt.language', $lang);
+        $this->db->where('mt.language_id', $lang_id);
         $this->db->order_by('mt.orders', "ASC");
         $query = $this->db->get();
         $query = $query->result_array();

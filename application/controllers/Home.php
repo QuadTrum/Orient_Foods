@@ -387,6 +387,7 @@ class Home extends MY_Controller
 
 	public function lang_switch($lang,$page="home_page_lang")
 	{
+		// var_dump($lang).die();
 		//$this->session->set_userdata('site_lang', $lang);
 		// By MH
 		$this->session->set_userdata($page, $lang);

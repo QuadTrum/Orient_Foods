@@ -626,9 +626,10 @@ if (!function_exists('get_restaurant_name_from_url')) {
         $CI = &get_instance();
         $current_url = $CI->uri->uri_string(); // Get the full URI string
         $name = basename($current_url);
+        // var_dump($CI->uri->segments).die();
         // Get total segments
         $segmentCount = $CI->uri->total_segments();
-        //    var_dump($segmentCount).die();
+        //  var_dump($segmentCount).die();
         // Iterate through the segments to find the restaurant name
         for ($i = 1; $i <= $segmentCount; $i++) {
             $segment = $CI->uri->segment($i);

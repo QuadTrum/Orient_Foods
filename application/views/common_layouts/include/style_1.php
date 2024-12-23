@@ -54,9 +54,37 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
 
     }
 </style>
-<?php 
-$url = basename(parse_url(current_url(), PHP_URL_PATH)); 
- ?>
+<?php
+
+// Check if "item-types" exists in the URL
+function getRestaurantName($itemTypesIndex, $segments)
+{
+    if ($itemTypesIndex !== false) {
+        // If "item-types" exists, check if there's a segment after it
+        if (isset($segments[$itemTypesIndex + 1]) && !preg_match('/^[a-f0-9]{32}$/', $segments[$itemTypesIndex + 1])) {
+            // Return the restaurant name (skip MD5 hash detection)
+            return $segments[$itemTypesIndex + 1];
+        }
+
+        // If no valid restaurant name is found after "item-types", return a default value
+        return isset($segments[$itemTypesIndex - 1]) ? $segments[$itemTypesIndex - 1] : null;
+    }
+
+    // If "item-types" is not in the URL, return the first segment as the restaurant name
+    return isset($segments[0]) ? $segments[0] : null;
+}
+$urlPath = parse_url(current_url(), PHP_URL_PATH);
+$segments = explode('/', trim($urlPath, '/'));
+$itemTypesIndex = array_search('item-types', $segments);
+
+if ($itemTypesIndex == true) {
+    $url = getRestaurantName($itemTypesIndex, $segments);
+} else {
+    $url = basename(parse_url(current_url(), PHP_URL_PATH));
+}
+// var_dump($url).die();
+
+?>
 <div class="customNavBar">
     <div class="customNav">
         <div class="container restaurant-container">
@@ -105,13 +133,13 @@ $url = basename(parse_url(current_url(), PHP_URL_PATH));
                         <ul>
                             <?php if ($shop['is_language'] == 1) : ?>
                                 <?php if (sizeof($language) > 1) : ?>
-                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('restaurant_page_lang_'.$url)) && auth('restaurant_page_lang_'.$url) === 'english' ? 'gb' : (auth('restaurant_page_lang_'.$url) === 'fa' ? 'ir' : (auth('restaurant_page_lang_'.$url) === 'ar' ? 'sa' : auth('restaurant_page_lang_'.$url)?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : '')))?>"></i>&nbsp;
-                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('restaurant_page_lang_'.$url)) ? auth('restaurant_page_lang_'.$url) : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
+                                    <li class="navDropdownMenu menuDropdown"><a class="nav-link p-r" href="javascript:;"><i class="fi fi-<?= !empty(auth('restaurant_page_lang_' . $url)) && auth('restaurant_page_lang_' . $url) === 'english' ? 'gb' : (auth('restaurant_page_lang_' . $url) === 'fa' ? 'ir' : (auth('restaurant_page_lang_' . $url) === 'ar' ? 'sa' : auth('restaurant_page_lang_' . $url) ?? ((isset($settings['language']) && $settings['language'] == 'english') ? 'gb' : ''))) ?>"></i>&nbsp;
+                                            <span class="allow mobileLang"><?= lang_slug(!empty(auth('restaurant_page_lang_' . $url)) ? auth('restaurant_page_lang_' . $url) : $settings['language']); ?> <i class="icofont-rounded-down"></i></span></a>
                                         <div class="navDropdownList" id="mainLang" style="display: none;">
                                             <ul>
                                                 <?php foreach ($language as $index => $ln) : ?>
                                                     <li>
-                                                        <a href="<?= base_url('home/lang_switch/'.$ln->slug.'/restaurant_page_lang_'.$url); ?>">
+                                                        <a href="<?= base_url('home/lang_switch/' . $ln->slug . '/restaurant_page_lang_' . $url); ?>">
                                                             <span class="mr-2 <?=
                                                                                 $ln->slug === 'ar' ? 'fi fi-sa' : ($ln->slug === 'fa' ? 'fi fi-ir' : ($index === 0 ? 'fi fi-gb' : 'fi fi-' . $ln->slug)) ?>"></span>
                                                             <?= $ln->lang_name; ?>
