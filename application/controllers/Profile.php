@@ -26,6 +26,7 @@ class Profile extends MY_Controller
 
     public function index($slug = '')
     {
+        // var_dump('hello').die();
         $this->load->model('common_m');  
         $slug = custom_domain($this->url, $slug);
         $data = array();

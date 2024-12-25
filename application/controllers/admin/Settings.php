@@ -134,9 +134,10 @@ class Settings extends MY_Controller
 		$data['page'] = "Banner Settings";
 		$data['data'] = false;
 		$data['faq'] = $this->admin_m->select('faq');
+		$data['languages'] = $this->admin_m->select('languages');
 		$data['settings'] = $this->admin_m->get_settings('settings');
 		$data['site_banners'] = $this->admin_m->single_select('section_banners');
-		$data['banners'] = $this->admin_m->select('section_banners');
+		$data['banners'] = $this->admin_m->selectBanner('section_banners');
 		$data['main_content'] = $this->load->view('backend/settings/banner_settings', $data, TRUE);
 		$this->load->view('backend/index', $data);
 	}
@@ -152,6 +153,7 @@ class Settings extends MY_Controller
 		$data['page_title'] = "Home Settings";
 		$data['page'] = "Settings";
 		$data['data'] = $this->admin_m->single_select_by_id($id, 'section_banners');
+		$data['languages'] = $this->admin_m->select('languages');
 		$data['setting'] = $this->admin_m->get_settings('settings');
 		$data['site_banners'] = $this->admin_m->single_select('section_banners');
 		$data['banners'] = $this->admin_m->select('section_banners');
@@ -380,36 +382,77 @@ class Settings extends MY_Controller
 	public function add_section_banner()
 	{
 		is_test();
+		// Fetch available languages
+		$languages = $this->admin_m->select('languages');  // Assuming you have a method to fetch available languages
+		$default_lang_slug = $this->input->post('default_language', TRUE);
+		// var_dump($default_lang_slug).die();
+		if (empty($default_lang_slug)) {
+			$default_lang_slug = 'english';
+		}
+
+		foreach ($languages as $lang) {
+			// Make the default language required, others optional
+			$rules = ($lang['slug'] === $default_lang_slug) ? 'trim|required|xss_clean' : 'trim|xss_clean';
+			$this->form_validation->set_rules('heading[' . $lang['slug'] . ']', 'Section Heading (' . $lang['lang_name'] . ')', $rules);
+			$this->form_validation->set_rules('sub_heading[' . $lang['slug'] . ']', 'Sub Heading (' . $lang['lang_name'] . ')', $rules);
+		}
 		$id = $this->input->post('id');
 		$this->form_validation->set_rules('section_name', 'Section name', 'trim|xss_clean|required');
-		$this->form_validation->set_rules('heading', 'Section Heading', 'trim|xss_clean|required');
-		$this->form_validation->set_rules('sub_heading', 'Sub Heading', 'trim|xss_clean');
+		// $this->form_validation->set_rules('heading', 'Section Heading', 'trim|xss_clean|required');
+		// $this->form_validation->set_rules('sub_heading', 'Sub Heading', 'trim|xss_clean');
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
 			redirect(base_url('admin/settings/banner_settings'));
 		} else {
 			$section_name = $this->input->post('section_name', TRUE);
-
-			$data = array(
+			// var_dump($section_name).die();
+			// Get the form data for all languages
+			$heading = $this->input->post('heading', TRUE);
+			$sub_heading = $this->input->post('sub_heading', TRUE);
+			// var_dump($heading).die();
+			$commonData = array(
 				'section_name' => $section_name,
-				'heading' => $this->input->post('heading', TRUE),
-				'sub_heading' => $this->input->post('sub_heading', TRUE),
-				'created_at' => d_time(),
 			);
-
-
-			if ($id == 0) {
-				$check = $this->admin_m->single_select_by_section_name($section_name);
-				if (!empty($check)) {
-					$this->session->set_flashdata('error', ' Sorry! you already insert this section, Try with edit option');
-					redirect(base_url('admin/settings/banner_settings'));
-					exit();
-				} else {
-					$insert = $this->admin_m->insert($data, 'section_banners');
+			foreach ($languages as $lang) {
+				// Skip empty fields for non-default languages
+				if ($lang['slug'] !== $default_lang_slug && empty($heading[$lang['slug']]) && empty($sub_heading[$lang['slug']])) {
+					continue;
 				}
-			} else {
-				$insert = $this->admin_m->update($data, $id, 'section_banners');
+
+				$data = array(
+					'heading' => isset($heading[$lang['slug']]) ? $heading[$lang['slug']] : '',
+					'sub_heading' => isset($sub_heading[$lang['slug']]) ? $sub_heading[$lang['slug']] : '',
+					'language_id' => $lang['id'],
+				);
+				// var_dump($lang['id']).die();
+				// Insert data for new entry or update existing entry
+				if ($id == 0) {
+					$check = $this->admin_m->single_select_by_section_name($section_name);
+					if (!empty($check)) {
+						$this->session->set_flashdata('error', ' Sorry! you already insert this section, Try with edit option');
+						redirect(base_url('admin/settings/banner_settings'));
+						exit();
+					} else {
+						$insert = $this->admin_m->insert(array_merge($data, $commonData), 'section_banners');
+					}
+				} else {
+
+					// Existing item, update or insert translations
+					$existing_translation = $this->db->where(['id' => $id, 'language_id' => $lang['id']])->get('section_banners')->row_array();
+					if ($existing_translation) {
+						// var_dump($data).die();
+						$images = isset($existing_translation['images']) ? $existing_translation['images'] : '';
+						// var_dump($existing_translation['images']).die();
+						$insert = $this->admin_m->update(array_merge($commonData, $data), $id, 'section_banners');
+					} else {
+						// var_dump($images).die();
+						$insert = $this->admin_m->insert(array_merge($commonData, $data, ['images' => $images]), 'section_banners');
+					}
+					// $insert = $this->admin_m->update($data,$commonData, $id, 'section_banners');
+				}
 			}
+
+
 
 			if ($insert) {
 				$this->upload_banner($insert, $table = 'section_banners');
@@ -1139,25 +1182,24 @@ class Settings extends MY_Controller
 	}
 
 	public function add_translation()
-{
-    // Get the input data from the form
-    $language = $this->input->post('language');
-    $key = $this->input->post('keyword');
-    $value = $this->input->post('value');
+	{
+		// Get the input data from the form
+		$language = $this->input->post('language');
+		$key = $this->input->post('keyword');
+		$value = $this->input->post('value');
 
-    // Prepare the data array
-    $data = array(
-        'language' => $language,
-        'key' => $key,
-        'value' => $value
-    );
+		// Prepare the data array
+		$data = array(
+			'language' => $language,
+			'key' => $key,
+			'value' => $value
+		);
 
-    // Call the multilingual_data function in Admin_model
-    $this->admin_m->multilingual_data($data);
+		// Call the multilingual_data function in Admin_model
+		$this->admin_m->multilingual_data($data);
 
-    // Set a flash message and redirect back to the translations page
-    $this->session->set_flashdata('success', 'Translation added successfully!');
-    redirect('admin/translations'); // Adjust the URL as needed
-}
-
+		// Set a flash message and redirect back to the translations page
+		$this->session->set_flashdata('success', 'Translation added successfully!');
+		redirect('admin/translations'); // Adjust the URL as needed
+	}
 }

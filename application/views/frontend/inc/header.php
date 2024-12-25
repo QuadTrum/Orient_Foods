@@ -123,17 +123,20 @@
             background-color: #333333 !important;
             color: #ffffff !important;
         }
-        body.dark-mode .bannerTitle, body.dark-mode  .bannerHeadline{
+
+        body.dark-mode .bannerTitle,
+        body.dark-mode .bannerHeadline {
             color: #ffffff !important;
         }
+
         body.dark-mode .moduleHeading,
         body.dark-mode .introTitle,
         body.dark-mode .introSubHeadline,
         body.dark-mode .heading-text,
         body.dark-mode .features-heading p,
         body.dark-mode .page_accordion_header,
-        body.dark-mode .accordion_content
-        {
+        body.dark-mode .accordion_content,
+        body.dark-mode .nav-item a {
             color: #ffffff !important;
         }
 
@@ -142,39 +145,67 @@
         body.dark-mode .review-card,
         body.dark-mode .features-wrap,
         body.dark-mode .page_accordion_header,
-        body.dark-mode .accordion_content
-        {
+        body.dark-mode .accordion_content,
+        body.dark-mode .dropdown-menu {
             background-color: #333333 !important;
+        }
+
+        body.dark-mode .homeMenuNav {
+            box-shadow: 0 0 0px #0c0c0c;
+            background-color: #333 !important;
+        }
+
+        body.dark-mode .form-control {
+            background-color: #3333 !important;
+            color: #fff !important;
+        }
+
+        body.dark-mode .shopTopper {
+            color: #fff;
+            background-color: #333;
+        }
+
+        body.dark-mode .singleShop .cardFooter{
+            background-color: #333;
+        }
+
+        body.dark-mode .singleShop .cardFooter li a{
+            color: #fff;
+        }
+        body.dark-mode .singleShop:hover {
+            box-shadow: 2px 2px 2px #fff ;
+            transition: 0.5s all ease-in-out;
         }
 
         /* light mode button desgin */
         #lightModeButton {
             border: 1px;
-            background: #333;
             padding: 7px;
+            background-color: transparent;
             border-radius: 100%;
         }
+
         #lightModeButton:hover {
             border: 1px;
-            background: #ffffff;
             padding: 7px;
             border-radius: 100%;
-            transition:0.5s all ease-in-out ;
+            transition: 0.5s all ease-in-out;
         }
+
         /* dark mode button  */
         #darkModeButton {
             border: 1px;
-            background: #fff;
             padding: 7px;
+            background-color: transparent;
             border-radius: 100%;
         }
+
         #darkModeButton:hover {
             border: 1px;
-            color: #fff;
-            background: #333;
+            color: #333;
             padding: 7px;
             border-radius: 100%;
-            transition:0.5s all ease-in-out ;
+            transition: 0.5s all ease-in-out;
         }
     </style>
 

@@ -75,7 +75,6 @@
 
 
   				<!-- another section  -->
-
   				<?php if (isset($settings['restaurant_demo'])  && !empty($settings['restaurant_demo'])) : ?>
   					<a href="<?= base_url($settings['restaurant_demo']); ?>" class="resaurantDemo" style="position: absolute;
 						    bottom: -30px;

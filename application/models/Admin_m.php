@@ -200,6 +200,22 @@ class Admin_m extends CI_Model
         $query = $query->result_array();
         return $query;
     }
+    // alternative function get banner setting from here on laguage basis
+    public function selectBanner($table)
+    {
+        $language = site_lang() ?? 'english';
+        $lang_id = $this->db->select('id')
+        ->from('languages')
+        ->where('slug', $language)
+        ->get()
+        ->row('id');
+        $this->db->select();
+        $this->db->from($table);
+        $query = $this->db->where('language_id', $lang_id);
+        $query = $this->db->get();
+        $query = $query->result_array();
+        return $query;
+    }
     public function user_login_info_check($email, $password)
     {
         $this->db->select('u.*');
@@ -1107,9 +1123,17 @@ class Admin_m extends CI_Model
 
     public function single_select_by_section_name($section_name)
     {
+        $language  = site_lang() ?? 'english';
+        $lang_id = $this->db->select('id')
+        ->from('languages')
+        ->where('slug', $language)
+        ->get()
+        ->row('id');
+        // var_dump($lang_id).die();
         $this->db->select('*');
         $this->db->from('section_banners');
         $this->db->where('section_name', $section_name);
+        $this->db->where('language_id', $lang_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) :
             return $query->row_array();
@@ -6171,7 +6195,7 @@ class Admin_m extends CI_Model
     // public function preferred_language($user_id, $language)
     // {
     //     $this->db->where('id', $user_id)
-    //         ->update('users', ['pref_lang' => $language]);
+    //         ->update('users', ['' => $language]);
     // }
 
     // langauge and faq relation

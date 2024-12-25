@@ -59,6 +59,7 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
 // Check if "item-types" exists in the URL
 function getRestaurantName($itemTypesIndex, $segments)
 {
+    // var_dump($segments).die();
     if ($itemTypesIndex !== false) {
         // If "item-types" exists, check if there's a segment after it
         if (isset($segments[$itemTypesIndex + 1]) && !preg_match('/^[a-f0-9]{32}$/', $segments[$itemTypesIndex + 1])) {
@@ -77,7 +78,7 @@ $urlPath = parse_url(current_url(), PHP_URL_PATH);
 $segments = explode('/', trim($urlPath, '/'));
 $itemTypesIndex = array_search('item-types', $segments);
 
-if ($itemTypesIndex == true) {
+if ($itemTypesIndex !== false) {
     $url = getRestaurantName($itemTypesIndex, $segments);
 } else {
     $url = basename(parse_url(current_url(), PHP_URL_PATH));

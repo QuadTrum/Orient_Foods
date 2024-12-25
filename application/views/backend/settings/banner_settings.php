@@ -27,6 +27,18 @@
 					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
 				</div>
 			</div>
+
+			<!-- Language Tabs -->
+			<ul class="nav nav-tabs">
+				<?php $is_first = true; ?>
+				<?php foreach ($languages as $lang): ?>
+					<li class="<?= ($is_first || $lang['slug'] == $current_language) ? 'active' : ''; ?>">
+						<a href="#<?= $lang['slug']; ?>" data-toggle="tab"><?= html_escape($lang['lang_name']); ?></a>
+					</li>
+					<?php $is_first = false; ?>
+				<?php endforeach; ?>
+			</ul>
+
 			<!-- /.box-header -->
 			<form action="<?= base_url('admin/settings/add_section_banner') ?>" method="post" class="skill_form" enctype="multipart/form-data">
 				<div class="box-body">
@@ -101,17 +113,26 @@
 								</option>
 							</select>
 						</div>
+						<!-- Language Content -->
+						<div class="tab-content">
+							<?php $is_first = true; ?>
+							<?php foreach ($languages as $lang): ?>
+								<div class="tab-pane <?= ($is_first || $lang['slug'] == $current_language) ? 'active' : ''; ?>" id="<?= $lang['slug']; ?>">
+									<div class="form-group col-md-12">
+										<label for="heading_<?= $lang['slug']; ?>"><?= !empty(lang('heading')) ? lang('heading') : "heading"; ?></label>
+										<input type="text" name="heading[<?= $lang['slug']; ?>]" id="heading_<?= $lang['slug']; ?>" class="form-control" placeholder="<?= !empty(lang('heading')) ? lang('heading') : "heading"; ?>" value="<?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['heading']) : set_value('heading[' . $lang['slug'] . ']'); ?>">
+									</div>
 
-						<div class="form-group col-md-12">
-							<label><?= !empty(lang('heading')) ? lang('heading') : "heading"; ?></label>
-							<input type="text" name="heading" id="heading" class="form-control" placeholder="<?= !empty(lang('heading')) ? lang('heading') : "heading"; ?>" value="<?= isset($data['heading']) ? html_escape($data['heading']) : ""; ?>">
+									<div class="form-group col-md-12">
+										<label for="subHeading_<?= $lang['slug']; ?>"><?= !empty(lang('sub_heading')) ? lang('sub_heading') : "sub heading"; ?></label>
+										<textarea name="sub_heading[<?= $lang['slug']; ?>]" id="subHeading_<?= $lang['slug']; ?>" class="form-control " cols="10" rows="5"><?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['sub_heading']) : set_value('sub_heading[' . $lang['slug'] . ']'); ?></textarea>
+									</div>
+								</div>
+								<?php $is_first = false; ?>
+							<?php endforeach; ?>
 						</div>
-
-						<div class="form-group col-md-12">
-							<label for="price"><?= !empty(lang('sub_heading')) ? lang('sub_heading') : "sub heading"; ?></label>
-							<textarea name="sub_heading" id="" class="form-control " cols="10" rows="5"><?= !empty($data['sub_heading']) ? $data['sub_heading'] : ""; ?></textarea>
-						</div>
-
+						<!-- Hidden ID Field -->
+						<input type="hidden" name="default_language" id="default_language" value="<?= $languages[0]['slug']; ?>" />
 						<div class="form-group col-md-12 hide_banner" style="display: <?= isset($data['section_name']) && ($data['section_name'] == "home" || $data['section_name'] == 'faq' || $data['section_name'] == "about_us_first" || $data['section_name'] == "about_us_second" || $data['section_name'] == "about_us_third" || $data['section_name'] == "feature_image_store" || $data['section_name'] == "feature_image_app" || $data['section_name'] == "feature_image_driver")  ? "block" : "none";; ?>;">
 							<label><?= !empty(lang('banner')) ? lang('banner') : "banner"; ?></label>
 							<div class="logo" style="height: 250px; width: 100%; border-radius: 0;">
@@ -247,3 +268,12 @@
 		</div>
 	</div>
 </div>
+<script>
+	$(document).ready(function() {
+		// On tab change, update the hidden input field
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+			var activeTab = $(e.target).attr("href").replace('#', ''); // Get the slug of the active tab
+			$('#default_language').val(activeTab); // Set the active language as default
+		});
+	});
+</script>

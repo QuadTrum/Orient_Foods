@@ -570,7 +570,7 @@ if (!function_exists('get_mh_session')) {
         // load language helper
         // var_dump($ci).die();
         $ci->load->helper('language');
-        // var_dump(current_url()) . die();
+        // var_dump($ci->session->userdata('site_lang')).die();
         $currentController = $ci->router->class;
         $currentUrl = current_url();
         // var_dump($currentController).die();
@@ -581,7 +581,7 @@ if (!function_exists('get_mh_session')) {
         $availablelangs  = ['home_page_lang', 'restaurant_page_lang', 'restaurant_admin_lang', 'super_admin_lang'];
         $homeCtrls       = ['home', 'login'];
         $restaurantCtrls = ['profile'];
-        $restaurantAdmins = ['admin', 'dashboard', 'settings', 'home','adminstaff','restaurant','kds','reports','auth','menu'];
+        $restaurantAdmins = ['admin', 'dashboard', 'settings', 'home', 'adminstaff', 'restaurant', 'kds', 'reports', 'auth', 'menu'];
         $superAdmins      = ['dashboard', 'settings'];
 
         $existingKeys = [];
@@ -596,20 +596,16 @@ if (!function_exists('get_mh_session')) {
             // Check if 'admin' exists in the URL
             if (strpos($currentUrl, 'admin') !== false && in_array($currentController, $restaurantAdmins)) {
                 $siteLang = "restaurant_admin_lang";
-
             } elseif (in_array($currentController, $homeCtrls)) {
 
                 $siteLang = "home_page_lang";
-
             } elseif (in_array($currentController, $restaurantCtrls)) {
-                
+                // if()
                 $slug = get_restaurant_name_from_url();
                 $siteLang = "restaurant_page_lang_" . $slug;
-
             } elseif (in_array($currentController, $superAdmins)) {
 
                 $siteLang = "super_admin_lang";
-
             }
 
             return $siteLang;
@@ -3176,8 +3172,29 @@ if (!function_exists('shop_default_language')) {
     function shop_default_language($id)
     {
 
+        $siteLang = get_mh_session();
         $ci = &get_instance();
+        $slug = get_restaurant_name_from_url();
+        $site_Lang = "restaurant_page_lang_" . $slug;
+        $sessionData  = $ci->session->userdata($site_Lang);
         $settings = settings();
+        $extraSetting = extra_settings($id);
+        $language = !empty($extraSetting['system_default_language']) ? $extraSetting['system_default_language'] : $settings['language'];
+        $currentController = $ci->router->class;
+        $restaurantCtrls = ['profile'];
+        if (empty($sessionData)) {
+            if (in_array($currentController, $restaurantCtrls)) {
+                $slug = get_restaurant_name_from_url();
+                $siteLang = "restaurant_page_lang_" . $slug;
+                $ci->session->set_userdata($siteLang, $language);
+                if (isset($siteLang)) {
+                    header("Refresh:0");
+                }
+                return $siteLang;
+            } else {
+                return null;
+            }
+        }
         if (empty(auth('vendor_lang'))) :
             $extra =  extra_settings($id);
             $ln = !empty($extra['system_default_language']) ? $extra['system_default_language'] : $settings['language'];
