@@ -121,6 +121,7 @@ class Menu extends MY_Controller
 
 		$is_size_check = $this->input->post('is_size', true);
 		$img_type = $this->input->post('img_type', true);
+		// var_dump($img_type).die();
 
 		foreach ($languages as $lang) {
 			$rules = ($lang['slug'] === $default_lang_slug) ? 'trim|xss_clean' : 'trim|xss_clean';
@@ -191,6 +192,7 @@ class Menu extends MY_Controller
 				'language' => $language ?? 'english',
 				'is_pos_only' => isset($_POST['is_pos_only']) ? $_POST['is_pos_only'] : 0,
 			];
+			
 
 			// Handle item insertion or updating for translations
 			foreach ($languages as $lang) {
@@ -218,11 +220,14 @@ class Menu extends MY_Controller
 
 					// Existing item, update or insert translations
 					$existing_translation = $this->db->where(['id' => $id, 'language_id' => $lang['id']])->get('items')->row_array();
-
 					if ($existing_translation) {
+						$images = isset($existing_translation['images']) ? $existing_translation['images'] : '';
+						$thumb = isset($existing_translation['thumb']) ? $existing_translation['thumb'] : '';
+						$items_id = isset($existing_translation['item_id']) ? $existing_translation['item_id'] : '';
 						$this->admin_m->update(array_merge($common_data, $translation_data, ['item_id' => $existing_translation['item_id']]), $existing_translation['id'], 'items');
 					} else {
-						$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $existing_translation['item_id']]), 'items');
+						// var_dump($existing_translation['item_id']).die();
+						$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $items_id,'thumb' => $thumb,'images' => $images]), 'items');
 					}
 				}
 			}
@@ -414,6 +419,7 @@ class Menu extends MY_Controller
 
 	public function edit_category($id)
 	{
+		
 		$data = array();
 		$data['page_title'] = "Category";
 		$data['is_create'] = true;
@@ -526,6 +532,7 @@ class Menu extends MY_Controller
 					// Insert translation with the same category ID
 					$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $cat_id]), 'menu_type');
 				} else {
+					
 					// Update existing category or clone
 					if (isset($is_clone) && $is_clone == 1 && isset($language) && $language != 'english') {
 						$cat_info = $this->admin_m->single_select_by_id($id, 'menu_type');
@@ -541,10 +548,11 @@ class Menu extends MY_Controller
 						$existing_translation = $this->db->where(['id' => $id, 'language_id' => $lang['id']])->get('menu_type')->row_array();
 
 						if ($existing_translation) {
+							$images = isset($existing_translation['images']) ? $existing_translation['images'] : '';
+							$thumbs = isset($existing_translation['thumb']) ? $existing_translation['thumb'] : '';
 							$insert = $this->admin_m->update(array_merge($commonData, $translationData, ['category_id' => $existing_translation['category_id']]), $existing_translation['id'], 'menu_type');
 						} else {
-
-							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id]), 'menu_type');
+							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id,'thumb' => $thumbs,'images' => $images]), 'menu_type');
 						}
 						// Update the translation
 						// $insert = $this->admin_m->update(

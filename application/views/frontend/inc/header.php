@@ -114,7 +114,7 @@
 
         /* Light mode */
         body.light-mode {
-            background-color: #ffffff !important;
+            background-color: #ffffff;
             color: #000000 !important;
         }
 
@@ -146,7 +146,13 @@
         body.dark-mode .features-wrap,
         body.dark-mode .page_accordion_header,
         body.dark-mode .accordion_content,
-        body.dark-mode .dropdown-menu {
+        body.dark-mode .dropdown-menu,
+        body.dark-mode .customNav,
+        body.dark-mode .categorySection,
+        body.dark-mode .singleHome_item,
+        body.dark-mode .homeItemDetails,
+        body.dark-mode .customNavsideBar
+        {
             background-color: #333333 !important;
         }
 
@@ -175,6 +181,19 @@
         body.dark-mode .singleShop:hover {
             box-shadow: 2px 2px 2px #fff ;
             transition: 0.5s all ease-in-out;
+        }
+
+        body.dark-mode .singleCatItem{
+            background: #333 !important;
+        }
+
+        body.dark-mode .homeSingle_item{
+            background: #333 !important;
+            box-shadow:0 0.3rem 1.525rem -0.375rem rgb(0 0 0 / 74%) !important;
+        }
+        body.dark-mode ul.gallery_sort li button{
+            background: #333 !important;
+            box-shadow: 0 4px 6px rgb(50 50 93 / 27%), 0 1px 3px rgb(0 0 0);
         }
 
         /* light mode button desgin */
@@ -394,7 +413,7 @@
 
 
 
-    <body style="Background-color:<?= isset($u_info['site_bg_color']) ? $u_info['site_bg_color'] : ''; ?> !important;">
+    <body style="Background-color:<?= isset($u_info['site_bg_color']) ? $u_info['site_bg_color'] : ''; ?>;">
 
         <?php if (isset($user_settings['preloader']) && $user_settings['preloader'] != 0) : ?>
             <div id="preloader">
