@@ -26,6 +26,7 @@ class Menu extends MY_Controller
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['all_items'] = $this->admin_m->get_all_items_ln('0', $_GET['lang'] ?? site_lang());
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
+			// var_dump($data['menu_type']).die();
 		else :
 			$data['all_items'] = $this->admin_m->get_all_items('0');
 			$data['menu_type'] = $this->admin_m->get_my_categories();
@@ -192,8 +193,8 @@ class Menu extends MY_Controller
 				'language' => $language ?? 'english',
 				'is_pos_only' => isset($_POST['is_pos_only']) ? $_POST['is_pos_only'] : 0,
 			];
-			
 
+			// var_dump($common_data).die();
 			// Handle item insertion or updating for translations
 			foreach ($languages as $lang) {
 				if ($lang['slug'] !== $default_lang_slug && empty($title[$lang['slug']]) && empty($details[$lang['slug']]) && empty($overview[$lang['slug']])) {
@@ -215,7 +216,12 @@ class Menu extends MY_Controller
 					if ($lang['slug'] == $default_lang_slug) {
 						$item_id = $this->admin_m->insert(['shop_id' => restaurant()->id, 'user_id' => auth('id'), 'uid' => $uid ?? time() . random_string('numeric', 3)], 'item_list');
 					}
-					$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $item_id, 'uid' => $uid ?? time() . random_string('numeric', 3), 'orders' => $n + 1]), 'items');
+
+					$itemId = $this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $item_id, 'uid' => $uid ?? time() . random_string('numeric', 3), 'orders' => $n + 1]), 'items');
+					if ($itemId) {
+						$this->upload_m->upload_img($itemId, 'items');
+						$this->upload_m->croped($itemId, 'items');
+					}
 				} else {
 
 					// Existing item, update or insert translations
@@ -227,14 +233,14 @@ class Menu extends MY_Controller
 						$this->admin_m->update(array_merge($common_data, $translation_data, ['item_id' => $existing_translation['item_id']]), $existing_translation['id'], 'items');
 					} else {
 						// var_dump($existing_translation['item_id']).die();
-						$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $items_id,'thumb' => $thumb,'images' => $images]), 'items');
+						$this->admin_m->insert(array_merge($common_data, $translation_data, ['item_id' => $items_id, 'thumb' => $thumb, 'images' => $images]), 'items');
 					}
 				}
 			}
-
+			// var_dump($item_id).die();
 			// Handle uploads
-			$this->upload_m->upload_img($id ?? $item_id, 'items');
-			$this->upload_m->croped($id ?? $item_id, 'items');
+			$this->upload_m->upload_img($id, 'items');
+			$this->upload_m->croped($id, 'items');
 			__request(lang('success_text'), 1, base_url('admin/menu/item_list/' . $cat_id));
 		}
 	}
@@ -419,7 +425,7 @@ class Menu extends MY_Controller
 
 	public function edit_category($id)
 	{
-		
+
 		$data = array();
 		$data['page_title'] = "Category";
 		$data['is_create'] = true;
@@ -532,7 +538,7 @@ class Menu extends MY_Controller
 					// Insert translation with the same category ID
 					$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $cat_id]), 'menu_type');
 				} else {
-					
+
 					// Update existing category or clone
 					if (isset($is_clone) && $is_clone == 1 && isset($language) && $language != 'english') {
 						$cat_info = $this->admin_m->single_select_by_id($id, 'menu_type');
@@ -552,7 +558,7 @@ class Menu extends MY_Controller
 							$thumbs = isset($existing_translation['thumb']) ? $existing_translation['thumb'] : '';
 							$insert = $this->admin_m->update(array_merge($commonData, $translationData, ['category_id' => $existing_translation['category_id']]), $existing_translation['id'], 'menu_type');
 						} else {
-							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id,'thumb' => $thumbs,'images' => $images]), 'menu_type');
+							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id, 'thumb' => $thumbs, 'images' => $images]), 'menu_type');
 						}
 						// Update the translation
 						// $insert = $this->admin_m->update(
@@ -1279,7 +1285,7 @@ class Menu extends MY_Controller
 
 		// Write the UTF-8 BOM (Byte Order Mark) to the file
 		fwrite($temp_file, "\xEF\xBB\xBF");
-		$columnNames = ['uid','language', 'title', 'images', 'thumb', 'price', 'overview', 'details', 'is_features', 'status', 'in_stock', 'tax_fee', 'veg_type', 'img_type', 'img_url'];
+		$columnNames = ['uid', 'language', 'title', 'images', 'thumb', 'price', 'overview', 'details', 'is_features', 'status', 'in_stock', 'tax_fee', 'veg_type', 'img_type', 'img_url'];
 		fputcsv($temp_file, $columnNames);
 		// Loop through the data and write each row to the file
 
@@ -1430,20 +1436,20 @@ class Menu extends MY_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 			exit();
 		}
-	
+
 		$csvMimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
 		if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $csvMimes)) {
-	
+
 			if (is_uploaded_file($_FILES['file']['tmp_name'])) {
 				// Open uploaded CSV file
 				$csvFile = fopen($_FILES['file']['tmp_name'], 'r');
-	
+
 				$header = fgetcsv($csvFile); // Skip the first row
-	
+
 				// Initialize variables for uid and item_id tracking
 				$previousUid = null;
 				$itemId = null;
-	
+
 				// Import the CSV file
 				while (($row = fgetcsv($csvFile)) !== FALSE) {
 					$uid = $row[0]; // Assume UID is the first column
@@ -1461,25 +1467,25 @@ class Menu extends MY_Controller
 					$veg_type = $row[12];
 					$img_type = $row[13];
 					$img_url = $row[14];
-	
+
 					// Retrieve the language ID from the languages table
 					$languageQuery = $this->db->select('id')
 						->from('languages')
 						->where('lang_name', $language)
 						->get();
-	
+
 					if ($languageQuery->num_rows() > 0) {
 						$languageId = $languageQuery->row()->id;
 					} else {
 						// If language not found, you can choose to skip or set a default language ID
 						$languageId = null; // Or set a default language ID, e.g., $defaultLanguageId
 					}
-	
+
 					// Generate a new entry in the item_list table if uid changes
 					if ($uid !== $previousUid) {
 						// Create a unique UID for this group
 						$randomUid = uniqid();
-	
+
 						// Insert into item_list table
 						$itemListData = array(
 							'user_id' => auth('id'),
@@ -1488,14 +1494,14 @@ class Menu extends MY_Controller
 							'uid' => $randomUid,
 						);
 						$this->db->insert('item_list', $itemListData);
-	
+
 						// Get the inserted item's primary key (item_id)
 						$itemId = $this->db->insert_id();
-	
+
 						// Update the previousUid tracker
 						$previousUid = $uid;
 					}
-	
+
 					// Prepare the data for insertion into the items table
 					$data = array(
 						'shop_id' => restaurant()->id,
@@ -1518,14 +1524,14 @@ class Menu extends MY_Controller
 						'img_url' => $img_url,
 						'language_id' => $languageId, // Store the language ID here
 					);
-	
+
 					// Insert the row into the items table
 					$this->admin_m->insert($data, 'items');
 				}
-	
+
 				// Close the CSV file
 				fclose($csvFile);
-	
+
 				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
 				redirect($_SERVER['HTTP_REFERER']);
 			} else {
@@ -1537,7 +1543,7 @@ class Menu extends MY_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
-	
+
 
 
 	private function parse_csv_file($file_path)

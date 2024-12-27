@@ -23,3 +23,5 @@ Thumbs.db
 
 # Git-related files
 *.lock
+# database file
+application/config/database.php

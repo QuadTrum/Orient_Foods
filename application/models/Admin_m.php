@@ -4317,12 +4317,17 @@ class Admin_m extends CI_Model
 
     public function get_total_item_by_cat_id_ln($id, $lang)
     {
+        $lang_id = $this->db->select('id')
+            ->from('languages')
+            ->where('slug', $lang)
+            ->get()
+            ->row('id');
         $shop_id = restaurant()->id;
         $this->db->select('i.*');
         $this->db->from('items i');
         $this->db->where('i.cat_id', $id);
         $this->db->where('i.shop_id', $shop_id);
-        $this->db->where('i.language', $lang);
+        $this->db->where('i.language_id', $lang_id);
         $query = $this->db->get();
         $query = $query->num_rows();
         return $query;

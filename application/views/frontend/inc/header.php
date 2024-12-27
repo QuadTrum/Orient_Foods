@@ -136,7 +136,9 @@
         body.dark-mode .features-heading p,
         body.dark-mode .page_accordion_header,
         body.dark-mode .accordion_content,
-        body.dark-mode .nav-item a {
+        body.dark-mode .nav-item a,
+        body.dark-mode .singleCatItem h4
+        {
             color: #ffffff !important;
         }
 
@@ -194,6 +196,13 @@
         body.dark-mode ul.gallery_sort li button{
             background: #333 !important;
             box-shadow: 0 4px 6px rgb(50 50 93 / 27%), 0 1px 3px rgb(0 0 0);
+        }
+        body.dark-mode .top_footer,
+        body.dark-mode .footer_bottom,
+        body.dark-mode .search-box-2,
+        body.dark-mode .homeBanner_left
+        {
+            background-color: #333 !important;
         }
 
         /* light mode button desgin */

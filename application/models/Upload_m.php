@@ -156,10 +156,6 @@ class Upload_m extends CI_Model
 			endif;
 		}
 	}
-
-
-
-
 	public function order_qr($phone, $orderId, $shopId)
 	{
 		$shop = $this->common_m->get_restaurant_info_by_id($shopId);
