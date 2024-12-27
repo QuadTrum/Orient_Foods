@@ -6,7 +6,7 @@ application/cache/
 .env
 
 # Vendor folder (if you regenerate dependencies)
-vendor/
+/vendor/
 
 # Uploads (user-uploaded files)
 uploads/
