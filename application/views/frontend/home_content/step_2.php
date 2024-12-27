@@ -105,7 +105,7 @@
 <div class="section-padding-top section-padding-bottom">
 	<div class="container py-5">
 		<div class="d-flex" style="justify-content:center;margin-bottom:24px;">
-			<h2 class="mb-5 ">Our Top Restaurants</h2>
+			<h2 class="mb-5 "><?= !empty(lang('our_top_restaurant')) ? lang('our_top_restaurant') : "Our Top Restaurants"; ?></h2>
 		</div>
 		<div class="row">
 			<ul class="d-flex flex-wrap justify-content-center restaurantLists" style="row-gap: 41px;column-gap: 22px;">
