@@ -25,3 +25,4 @@ Thumbs.db
 *.lock
 # database file
 application/config/database.php
+application/.htaccess
