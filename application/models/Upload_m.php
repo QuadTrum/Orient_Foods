@@ -232,7 +232,7 @@ class Upload_m extends CI_Model
 	}
 
 
-	public function croped($id,$table)
+	public function croped($id, $table)
 	{
 		if ($this->input->post('cropData')) {
 			$base64Image = $this->input->post('cropData');
@@ -244,13 +244,13 @@ class Upload_m extends CI_Model
 
 			$filePath = $uploadPath . $fileName;
 
-			
+
 
 			// Save the image to the server
 			file_put_contents($filePath, $imageData);
-			$thumb = resize_img($filePath,350,300,$uploadPath);
-			
-			$this->admin_m->update(['thumb'=>$thumb,'images'=>$filePath],$id,$table);
+			$thumb = resize_img($filePath, 350, 300, $uploadPath);
+
+			$this->admin_m->update(['thumb' => $thumb, 'images' => $filePath], $id, $table);
 			return true;
 		} else {
 			return false;
@@ -287,6 +287,43 @@ class Upload_m extends CI_Model
 			echo $this->upload->display_errors();
 		} else {
 			echo 'Cropped and resized image uploaded successfully!';
+		}
+	}
+
+	/**===== by mh ====**/
+	public function upload_catimg($id, $table)
+	{
+		if (!empty($_FILES['file']['name'])) {
+			// Call the upload function
+			$up_load = $this->upload(400);
+
+			// If upload is successful
+			if ($up_load['st'] == 1) :
+				$this->db->select('category_id');
+				$this->db->from($table);
+				$this->db->where('id', $id);
+				$query = $this->db->get();
+				$category = $query->row_array();
+				if ($category) {
+					// Loop through the uploaded data
+					foreach ($up_load['data'] as $key => $value) {
+						// Prepare data for updating
+						$data = array(
+							'images' => $value['image'],
+							'thumb' => $value['thumb'],
+						);
+
+						// Update all rows with the same category_id
+						$this->db->where('category_id', $category['category_id']);
+						$this->db->update($table, $data);
+					}
+					return true;
+				} else {
+					$this->session->set_flashdata('error', 'Category not found.');
+				}
+			else :
+				$this->session->set_flashdata('success', $up_load['data']['error']);
+			endif;
 		}
 	}
 }

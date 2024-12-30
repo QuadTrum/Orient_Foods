@@ -26,7 +26,7 @@ class Menu extends MY_Controller
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['all_items'] = $this->admin_m->get_all_items_ln('0', $_GET['lang'] ?? site_lang());
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
-			// var_dump($data['menu_type']).die();
+			// var_dump($data['all_items']).die();
 		else :
 			$data['all_items'] = $this->admin_m->get_all_items('0');
 			$data['menu_type'] = $this->admin_m->get_my_categories();
@@ -572,7 +572,7 @@ class Menu extends MY_Controller
 			}
 
 			if ($insert) {
-				$this->upload_m->upload_img($insert, 'menu_type');
+				$this->upload_m->upload_catimg($insert, 'menu_type');
 				$this->session->set_flashdata('success', !empty(lang('success_text')) ? lang('success_text') : 'Save Change Successful');
 				redirect(base_url('admin/menu/category'));
 			} else {
