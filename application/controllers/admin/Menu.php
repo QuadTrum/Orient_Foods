@@ -558,6 +558,7 @@ class Menu extends MY_Controller
 							$thumbs = isset($existing_translation['thumb']) ? $existing_translation['thumb'] : '';
 							$insert = $this->admin_m->update(array_merge($commonData, $translationData, ['category_id' => $existing_translation['category_id']]), $existing_translation['id'], 'menu_type');
 						} else {
+							// var_dump($images).die();
 							$insert = $this->admin_m->insert(array_merge($commonData, $translationData, ['category_id' => $default_cat_id, 'thumb' => $thumbs, 'images' => $images]), 'menu_type');
 						}
 						// Update the translation
