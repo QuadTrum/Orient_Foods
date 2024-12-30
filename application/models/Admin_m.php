@@ -627,6 +627,7 @@ class Admin_m extends CI_Model
         return $query->row_array();
     }
 
+
     public function get_languages_by_slug($slug)
     {
         $this->db->select();
@@ -681,10 +682,21 @@ class Admin_m extends CI_Model
     {
         $this->db->select();
         $this->db->from($table);
-        $this->db->where('id', $id);
+        $this->db->where('category_id', $id);
         $this->db->where('user_id', auth('id'));
         $query = $this->db->get();
-        $query = $query->row_array();
+        $query = $query->result_array();
+        
+        return $query;
+    }
+    public function single_select_items_by_auth_id($id, $table)
+    {
+        $this->db->select();
+        $this->db->from($table);
+        $this->db->where('item_id', $id);
+        $this->db->where('user_id', auth('id'));
+        $query = $this->db->get();
+        $query = $query->result_array();
         return $query;
     }
     public function single_select_by_uid($id, $table)
@@ -2153,34 +2165,45 @@ class Admin_m extends CI_Model
     {
         // var_dump($language).die();
         $lang_id = $this->db->select('id')
-            ->from('languages')
-            ->where('slug', $language)
-            ->get()
-            ->row('id');
-        $this->db->select('mt.*');
-        $this->db->from('menu_type mt');
-        $this->db->where('mt.user_id', auth('id'));
-        $this->db->where('mt.language_id', $lang_id);
-        if ($id != 0) {
-            $this->db->where('mt.category_id', $id);
-        }
-        $this->db->order_by('mt.orders', 'ASC');
-        $query = $this->db->get();
-        $query = $query->result_array();
-        foreach ($query as $key => $value) {
-            $this->db->select('i.*,a.name as allergen,i.id as product_id');
-            $this->db->from('items i');
-            $this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
-            $this->db->where('i.cat_id', $value['category_id']);
-            $this->db->where('i.language_id', $lang_id);
-            $this->db->where('i.user_id', auth('id'));
-            $this->db->order_by('i.orders', 'ASC');
-            $query2 = $this->db->get();
-            $query2 = $query2->result_array();
-            $query[$key]['items'] = $query2;
-        }
-
-        return $query;
+        ->from('languages')
+        ->where('slug', $language)
+        ->get()
+        ->row('id');
+    
+    $this->db->select('mt.*');
+    $this->db->from('menu_type mt');
+    $this->db->where('mt.user_id', auth('id'));
+    $this->db->where('mt.language_id', $lang_id);
+    if ($id != 0) {
+        $this->db->where('mt.category_id', $id);
+    }
+    $this->db->order_by('mt.orders', 'ASC');
+    $query = $this->db->get();
+    $query = $query->result_array();
+    
+    // Loop to fetch items for each category with grouping and last item selection
+    foreach ($query as $key => $value) {
+        // Subquery to get the last item for each group by item_id
+        $subquery = $this->db->select('MAX(i.id) AS max_id')
+            ->from('items i')
+            ->where('i.cat_id', $value['category_id'])
+            ->where('i.user_id', auth('id'))
+            ->group_by('i.item_id')
+            ->get_compiled_select();
+    
+        // Join the subquery to fetch item details
+        $this->db->select('i.*, a.name as allergen, i.id as product_id');
+        $this->db->from('items i');
+        $this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
+        $this->db->join("($subquery) subquery", 'i.id = subquery.max_id');
+        $this->db->order_by('i.orders', 'ASC');
+        $query2 = $this->db->get();
+        $query2 = $query2->result_array();
+    
+        $query[$key]['items'] = $query2;
+    }
+    
+    return $query;
     }
 
 
@@ -5010,18 +5033,28 @@ class Admin_m extends CI_Model
     public function get_my_categories_ln($shop_id, $language = null)
     {
         $lang = !empty($language) ? $language : st()->language;
+
         $lang_id = $this->db->select('id')
             ->from('languages')
             ->where('slug', $language)
             ->get()
             ->row('id');
+        
+        // Subquery to get the last row by `category_id`
+        $subquery = $this->db->select('MAX(mt.id) AS max_id')
+            ->from('menu_type mt')
+            ->where('mt.user_id', auth('id'))
+         //   ->where('mt.language_id', $lang_id)
+            ->group_by('mt.category_id')
+            ->get_compiled_select();
+        
         $this->db->select('mt.*');
         $this->db->from('menu_type mt');
-        $this->db->where('mt.user_id', auth('id'));
-        $this->db->where('mt.language_id', $lang_id);
+        $this->db->join("($subquery) subquery", 'mt.id = subquery.max_id');
         $this->db->order_by('mt.orders', "ASC");
         $query = $this->db->get();
         $query = $query->result_array();
+        
         return $query;
     }
 
@@ -6220,5 +6253,49 @@ class Admin_m extends CI_Model
         $this->db->join('languages', 'manual_reviews.language_id = languages.id', 'left');  // Use 'left' join to include all faq even if the language is missing
         $query = $this->db->get();
         return $query->result_array();
+    }
+    // by MH 
+    public function get_cat_name($catId,$langId)
+    {
+        $this->db->where('category_id', $catId);
+        $this->db->where('language_id', $langId);
+        $query = $this->db->get('menu_type'); 
+        return $query->row();
+    }
+    public function get_item_name($itemId,$langId)
+    {
+       
+        $this->db->where('item_id', $itemId);
+        $this->db->where('language_id', $langId);
+        $query = $this->db->get('items'); 
+        return $query->row();
+    }
+    public function single_category_select_by_id($id, $table)
+    {
+        $this->db->select();
+        $this->db->from($table);
+        $this->db->where('category_id', $id);
+        $query = $this->db->get();
+        $query = $query->result_array();
+        return $query;
+    }
+    function category_delete($id, $table)
+    {
+        $this->db->delete($table, array('category_id' => $id));
+        return $id;
+    }
+    public function single_item_select_by_id($id, $table)
+    {
+        $this->db->select();
+        $this->db->from($table);
+        $this->db->where('item_id', $id);
+        $query = $this->db->get();
+        $query = $query->result_array();
+        return $query;
+    }
+    function delete_item($id, $table)
+    {
+        $this->db->delete($table, array('item_id' => $id));
+        return $id;
     }
 }

@@ -503,22 +503,51 @@ class Auth extends MY_Controller
     {
         is_test();
 
-
-        $img = $this->admin_m->single_select_by_id($id, $table);
-
-        if (isset($img['images']) && !empty($img['images'])) {
-            delete_image_from_server($img['images']);
+        if($table=="menu_type")
+        {
+            $result = $this->admin_m->single_category_select_by_id($id, $table);
+            $img = end($result);
+            if (isset($img['images']) && !empty($img['images'])) {
+                delete_image_from_server($img['images']);
+            }
+            if (isset($img['thumb']) && !empty($img['thumb'])) {
+                delete_image_from_server($img['thumb']);
+            }
+            $del = $this->admin_m->category_delete($id, $table);
+           
+    
         }
-        if (isset($img['thumb']) && !empty($img['thumb'])) {
-            delete_image_from_server($img['thumb']);
+        else if ($table=="items")
+        {
+            $result = $this->admin_m->single_item_select_by_id($id, $table);
+            $img = end($result);
+            if (isset($img['images']) && !empty($img['images'])) {
+                delete_image_from_server($img['images']);
+            }
+            if (isset($img['thumb']) && !empty($img['thumb'])) {
+                delete_image_from_server($img['thumb']);
+            }
+            $del = $this->admin_m->delete_item($id, $table);
         }
+        else
+        {
+            $img = $this->admin_m->single_select_by_id($id, $table);
 
-        if (auth('is_user') == true) {
-            $del = $this->admin_m->item_delete($id, $table);
-        } else {
-            $del = $this->admin_m->delete_single_item($id, $table);
+            if (isset($img['images']) && !empty($img['images'])) {
+                delete_image_from_server($img['images']);
+            }
+            if (isset($img['thumb']) && !empty($img['thumb'])) {
+                delete_image_from_server($img['thumb']);
+            }
+    
+            if (auth('is_user') == true) {
+                $del = $this->admin_m->item_delete($id, $table);
+            } else {
+                $del = $this->admin_m->delete_single_item($id, $table);
+            }
+    
         }
-
+      
 
 
         if ($del) {
@@ -2314,4 +2343,6 @@ class Auth extends MY_Controller
                 </div>';
         echo json_encode(array('status' => 'completed', 'message' => $msg));
     }
+
+    
 }

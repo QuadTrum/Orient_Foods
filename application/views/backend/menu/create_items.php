@@ -113,7 +113,7 @@
 					<!-- Language Content -->
 					<div class="tab-content">
 						<?php $is_first = true; ?>
-						<?php foreach ($languages as $lang): ?>
+						<?php foreach ($languages as $key => $lang): ?>
 							<div class="tab-pane <?= ($is_first || $lang['slug'] == $current_language) ? 'active' : ''; ?>" id="<?= $lang['slug']; ?>">
 								<div class="row" style="margin-top:2rem !important">
 									<!-- Title Field -->
@@ -121,25 +121,25 @@
 										<?php restaurant()->stock_status == 1 ? $is_stock = 1 : $is_stock = 0; ?>
 										<div class="form-group <?= $is_stock == 1 ? "col-md-6" : "col-md-12"; ?>">
 											<label for="title_<?= $lang['slug']; ?>"><?= !empty(lang('title')) ? lang('title') : "Title"; ?> <span class="error">*</span></label>
-											<input type="text" name="title[<?= $lang['slug']; ?>]" id="title_<?= $lang['slug']; ?>" class="form-control" placeholder="<?= !empty(lang('item_name')) ? lang('item_name') : "item name"; ?>" value="<?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['title']) : set_value('title[' . $lang['slug'] . ']'); ?>">
+											<input type="text" name="title[<?= $lang['slug']; ?>]" id="title_<?= $lang['slug']; ?>" class="form-control" placeholder="<?= !empty(lang('item_name')) ? lang('item_name') : "item name"; ?>" value="<?= (isset($data[$key]['language_id']) && $data[$key]['language_id'] == $lang['id']) ? html_escape($data[$key]['title']) : set_value('title[' . $lang['slug'] . ']'); ?>">
 										</div>
 										<?php if ($is_stock == 1) : ?>
 											<div class="form-group <?= $is_stock == 1 ? "col-md-6" : "col-md-12"; ?>">
 												<label><?= !empty(lang('in_stock')) ? lang('in_stock') : "in stock"; ?> <span class="error">*</span></label>
 
-												<input type="text" name="in_stock" class="form-control" placeholder="<?= !empty(lang('in_stock')) ? lang('in_stock') : "in stock"; ?>" value="<?= !empty($data['in_stock']) ? html_escape($data['in_stock']) : 0; ?>">
+												<input type="text" name="in_stock" class="form-control" placeholder="<?= !empty(lang('in_stock')) ? lang('in_stock') : "in stock"; ?>" value="<?= !empty($data[0]['in_stock']) ? html_escape($data[0]['in_stock']) : 0; ?>">
 											</div>
 										<?php endif; ?>
 									</div>
 									<div class="row">
 										<div class=" form-group col-md-12">
 											<label for="overview_<?= $lang['slug']; ?>"><?= !empty(lang('small_description')) ? lang('small_description') : "small description"; ?> (<span class="characters small"></span>) <span class="error">*</span> </label>
-											<textarea name="overview[<?= $lang['slug']; ?>]" id="overview_<?= $lang['slug']; ?>" cols="5" rows="5" data-max="150" class="form-control count_text"><?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['overview']) : set_value('overview[' . $lang['slug'] . ']'); ?></textarea>
+											<textarea name="overview[<?= $lang['slug']; ?>]" id="overview_<?= $lang['slug']; ?>" cols="5" rows="5" data-max="150" class="form-control count_text"><?= (isset($data[$key]['language_id']) && $data[$key]['language_id'] == $lang['id']) ? html_escape($data[$key]['overview']) : set_value('overview[' . $lang['slug'] . ']'); ?></textarea>
 										</div>
 
 										<div class="col-md-12">
 											<label for="details_<?= $lang['slug']; ?>"><?= !empty(lang('details')) ? lang('details') : "details"; ?></label>
-											<textarea name="details[<?= $lang['slug']; ?>]" id="details_<?= $lang['slug']; ?>" cols="5" rows="5" class="form-control textarea"><?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['details']) : set_value('details[' . $lang['slug'] . ']'); ?></textarea>
+											<textarea name="details[<?= $lang['slug']; ?>]" id="details_<?= $lang['slug']; ?>" cols="5" rows="5" class="form-control textarea"><?= (isset($data[$key]['language_id']) && $data[$key]['language_id'] == $lang['id']) ? html_escape($data[$key]['details']) : set_value('details[' . $lang['slug'] . ']'); ?></textarea>
 										</div>
 									</div>
 								</div>
@@ -155,7 +155,7 @@
 							<select name="cat_id" class="form-control" required>
 								<option value=""><?= lang('select_category'); ?></option>
 								<?php foreach ($menu_type as $key => $type) : ?>
-									<option data-type="<?= html_escape($type['type']); ?>" <?= isset($data['cat_id']) && $data['cat_id'] == $type['category_id'] ? "selected" : ""; ?> <?= isset($cat_id) && $cat_id == md5($type['category_id']) ? "selected" : ""; ?> value="<?= $type['category_id']; ?>"><?= $type['name']; ?></option>
+									<option data-type="<?= html_escape($type['type']); ?>" <?= isset($data[0]['cat_id']) && $data[0]['cat_id'] == $type['category_id'] ? "selected" : ""; ?> <?= isset($cat_id) && $cat_id == md5($type['category_id']) ? "selected" : ""; ?> value="<?= $type['category_id']; ?>"><?= $type['name']; ?></option>
 								<?php endforeach ?>
 							</select>
 						</div>
@@ -163,12 +163,12 @@
 							<div class="form-group col-md-6">
 								<label for=""><?= !empty(lang('sub_categories')) ? lang('sub_categories') : "sub_categories"; ?></label>
 								<select name="sub_category_id" class="form-control" id="sub_category">
-									<?php if (isset($data['cat_id'])): ?>
-										<?php $sub_category_list = $this->admin_m->get_subcategories_by_cat_id($data['cat_id'], $_ENV['ID'], $is_md5 = false); ?>
+									<?php if (isset($data[0]['cat_id'])): ?>
+										<?php $sub_category_list = $this->admin_m->get_subcategories_by_cat_id($data[0]['cat_id'], $_ENV['ID'], $is_md5 = false); ?>
 									<?php endif ?>
 									<?php if (isset($sub_category_list) && sizeof($sub_category_list) > 0) : ?>
 										<?php foreach ($sub_category_list as $sub_cat) : ?>
-											<option value="<?= $sub_cat['id']; ?>" <?= isset($sub_cat['id']) && $sub_cat['id'] == $data['sub_category_id'] ? "selected" : ""; ?>><?= $sub_cat['sub_category_name']; ?></option>
+											<option value="<?= $sub_cat['id']; ?>" <?= isset($sub_cat['id']) && $sub_cat['id'] == $data[0]['sub_category_id'] ? "selected" : ""; ?>><?= $sub_cat['sub_category_name']; ?></option>
 										<?php endforeach ?>
 									<?php else : ?>
 										<option value=""><?= lang('select_category'); ?></option>
@@ -186,21 +186,21 @@
 					<div class="row">
 						<div class="form-group col-md-12 size_tag">
 							<div class="d_flex_center">
-								<label class="pointer label label bg-light-purple-soft vegs "><input <?= isset($data['is_size']) && $data['is_size'] == 1 ? 'checked' : ''; ?> type="checkbox" name="is_size" class="is_size defaultToggle" value="1">&nbsp; <?= !empty(lang('is_variants')) ? lang('is_variants') : "Is variants"; ?></label>
+								<label class="pointer label label bg-light-purple-soft vegs "><input <?= isset($data[0]['is_size']) && $data[0]['is_size'] == 1 ? 'checked' : ''; ?> type="checkbox" name="is_size" class="is_size defaultToggle" value="1">&nbsp; <?= !empty(lang('is_variants')) ? lang('is_variants') : "Is variants"; ?></label>
 							</div>
 						</div>
-						<div class="rows show_price <?= isset($data['is_size']) && $data['is_size'] == 1 ? 'hidden' : ''; ?>">
+						<div class="rows show_price <?= isset($data[0]['is_size']) && $data[0]['is_size'] == 1 ? 'hidden' : ''; ?>">
 							<div class="form-group col-md-6  ">
 								<label for="price"><?= !empty(lang('current_price')) ? lang('current_price') : "Current price"; ?></label>
-								<input type="text" name="price" id="price" class="form-control number" placeholder="<?= !empty(lang('price')) ? lang('price') : "price"; ?>" value="<?= !empty($data['price']) ? html_escape($data['price']) : set_value('price'); ?>">
+								<input type="text" name="price" id="price" class="form-control number" placeholder="<?= !empty(lang('price')) ? lang('price') : "price"; ?>" value="<?= !empty($data[0]['price']) ? html_escape($data[0]['price']) : set_value('price'); ?>">
 							</div>
 							<div class="form-group col-md-6">
 								<label><?= __('previous_price'); ?></label>
-								<input type="text" name="previous_price" class="form-control number" value="<?= !empty($data['previous_price']) ? html_escape($data['previous_price']) : set_value('previous_price'); ?>">
+								<input type="text" name="previous_price" class="form-control number" value="<?= !empty($data[0]['previous_price']) ? html_escape($data[0]['previous_price']) : set_value('previous_price'); ?>">
 							</div>
 						</div>
 
-						<div class="col-md-12 show_size_price <?= isset($data['is_size']) && $data['is_size'] == 1 ? '' : 'hidden'; ?>">
+						<div class="col-md-12 show_size_price <?= isset($data[0]['is_size']) && $data[0]['is_size'] == 1 ? '' : 'hidden'; ?>">
 							<div class="card mb-20">
 								<div class="card-header space-between border-0">
 									<h4><?= lang('variants'); ?></h4>
@@ -226,11 +226,11 @@
 										<div class="input-group">
 											<span class="input-group-addon">
 												<select name="tax_status" class="" id="">
-													<option value="+" <?= isset($data['tax_status']) && $data['tax_status'] == '+' ? "selected" : ""; ?>>+</option>
-													<option value="-" <?= isset($data['tax_status']) && $data['tax_status'] == '-' ? "selected" : ""; ?>>-</option>
+													<option value="+" <?= isset($data[0]['tax_status']) && $data[0]['tax_status'] == '+' ? "selected" : ""; ?>>+</option>
+													<option value="-" <?= isset($data[0]['tax_status']) && $data[0]['tax_status'] == '-' ? "selected" : ""; ?>>-</option>
 												</select>
 											</span>
-											<input type="number" name="tax_fee" id="tax_fee" class="form-control" placeholder="<?= !empty(lang('tax_fee')) ? lang('tax_fee') : "tax_fee"; ?>" value="<?= !empty($data['tax_fee']) ? html_escape($data['tax_fee']) : restaurant()->tax_fee; ?>">
+											<input type="number" name="tax_fee" id="tax_fee" class="form-control" placeholder="<?= !empty(lang('tax_fee')) ? lang('tax_fee') : "tax_fee"; ?>" value="<?= !empty($data[0]['tax_fee']) ? html_escape($data[0]['tax_fee']) : restaurant()->tax_fee; ?>">
 											<span class="input-group-addon">%</span>
 										</div>
 
@@ -247,10 +247,10 @@
 						<div class="form-group col-md-6">
 							<label for=""><?= !empty(lang('veg_type')) ? lang('veg_type') : "Veg type"; ?></label>
 							<div class="d_flex_center">
-								<label class="pointer label success-light vegs"><input <?= isset($data['veg_type']) && $data['veg_type'] == 1 ? 'checked' : ''; ?> type="radio" name="veg_type" value="1">&nbsp; <?= !empty(lang('veg')) ? lang('veg') : "Veg"; ?></label>
-								<label class="pointer label danger-light vegs"><input <?= isset($data['veg_type']) && $data['veg_type'] == 2 ? 'checked' : ''; ?> type="radio" name="veg_type" value="2">&nbsp; <?= !empty(lang('non_veg')) ? lang('non_veg') : "Non veg"; ?></label>
+								<label class="pointer label success-light vegs"><input <?= isset($data[0]['veg_type']) && $data[0]['veg_type'] == 1 ? 'checked' : ''; ?> type="radio" name="veg_type" value="1">&nbsp; <?= !empty(lang('veg')) ? lang('veg') : "Veg"; ?></label>
+								<label class="pointer label danger-light vegs"><input <?= isset($data[0]['veg_type']) && $data[0]['veg_type'] == 2 ? 'checked' : ''; ?> type="radio" name="veg_type" value="2">&nbsp; <?= !empty(lang('non_veg')) ? lang('non_veg') : "Non veg"; ?></label>
 
-								<label class="pointer label default-light vegs"><input <?= isset($data['veg_type']) && $data['veg_type'] == 0 ? 'checked' : ''; ?> type="radio" name="veg_type" value="0">&nbsp; <?= lang('none'); ?></label>
+								<label class="pointer label default-light vegs"><input <?= isset($data[0]['veg_type']) && $data[0]['veg_type'] == 0 ? 'checked' : ''; ?> type="radio" name="veg_type" value="0">&nbsp; <?= lang('none'); ?></label>
 							</div>
 						</div>
 					</div>
@@ -261,10 +261,10 @@
 							<select name="allergen_id[]" class="form-control select2" id="" multiple style="min-height: 47px;">
 								<option value=""><?= lang('select'); ?></option>
 								<?php foreach ($allergens as $key => $value) : ?>
-									<?php if (is_array(json_decode($data['allergen_id']))) : ?>
-										<option <?= isset($data['allergen_id']) && in_array($value['id'], json_decode($data['allergen_id'])) == 1 ? "selected" : ""; ?> value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
+									<?php if (is_array(json_decode($data[0]['allergen_id']))) : ?>
+										<option <?= isset($data[0]['allergen_id']) && in_array($value['id'], json_decode($data[0]['allergen_id'])) == 1 ? "selected" : ""; ?> value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
 									<?php else : ?>
-										<option <?= isset($data['allergen_id']) && $data['allergen_id'] == $value['id'] ? "selected" : ""; ?> value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
+										<option <?= isset($data[0]['allergen_id']) && $data[0]['allergen_id'] == $value['id'] ? "selected" : ""; ?> value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
 									<?php endif; ?>
 								<?php endforeach; ?>
 
@@ -276,7 +276,7 @@
 					<div class="row">
 						<div class="form-group col-md-12">
 
-							<label class="label label-info pointer label_input custom-checkbox mr-10"><input type="checkbox" name="is_features" <?= isset($data['is_features']) && $data['is_features'] == 1 ? 'checked' : ""; ?> value="1"> <?= lang('show_in_homepage'); ?></label>
+							<label class="label label-info pointer label_input custom-checkbox mr-10"><input type="checkbox" name="is_features" <?= isset($data[0]['is_features']) && $data[0]['is_features'] == 1 ? 'checked' : ""; ?> value="1"> <?= lang('show_in_homepage'); ?></label>
 
 							<?php if (isset($_GET['action'])) : ?>
 								<label class="label label-warning pointer label_input custom-checkbox ml-20"> <input type="checkbox" name="is_copy_extra" value="1"> <?= lang('add_those_extras_also'); ?></label>
@@ -284,12 +284,12 @@
 						</div>
 
 						<div class="form-group col-md-12 mt-10">
-							<label class="label success-light-active pl-3 label_input custom-radio"><input type="radio" name="is_pos_only" <?= isset($data['is_pos_only']) && $data['is_pos_only'] == 0 ? 'checked' : ""; ?> value="0" checked> <?= lang('all'); ?></label>
+							<label class="label success-light-active pl-3 label_input custom-radio"><input type="radio" name="is_pos_only" <?= isset($data[0]['is_pos_only']) && $data[0]['is_pos_only'] == 0 ? 'checked' : ""; ?> value="0" checked> <?= lang('all'); ?></label>
 							<?php if (is_pos() == 1) : ?>
-								<label class="label bg-purple-soft-active pl-3 label_input custom-radio"><input type="radio" name="is_pos_only" <?= isset($data['is_pos_only']) && $data['is_pos_only'] == 1 ? 'checked' : ""; ?> value="1"> <?= lang('only_for_pos'); ?></label>
+								<label class="label bg-purple-soft-active pl-3 label_input custom-radio"><input type="radio" name="is_pos_only" <?= isset($data[0]['is_pos_only']) && $data[0]['is_pos_only'] == 1 ? 'checked' : ""; ?> value="1"> <?= lang('only_for_pos'); ?></label>
 							<?php endif ?>
 
-							<label class="label primary-light-active pl-3 label_input custom-radio ml-10 <?= isset($data['is_size']) && $data['is_size'] == 1 ? "" : "hideArea" ?>"><input type="radio" name="is_pos_only" <?= isset($data['is_pos_only']) && $data['is_pos_only'] == 2 ? 'checked' : ""; ?> value="2"> <?= lang('only_for_package'); ?></label>
+							<label class="label primary-light-active pl-3 label_input custom-radio ml-10 <?= isset($data[0]['is_size']) && $data[0]['is_size'] == 1 ? "" : "hideArea" ?>"><input type="radio" name="is_pos_only" <?= isset($data[0]['is_pos_only']) && $data[0]['is_pos_only'] == 2 ? 'checked' : ""; ?> value="2"> <?= lang('only_for_package'); ?></label>
 
 						</div>
 
@@ -301,22 +301,22 @@
 						<div class="col-md-12 col-lg-12 col-sm-12">
 
 							<ul class="nav nav-tabs">
-								<li class="<?= !empty($data) ? "" : "active"; ?> <?= isset($data['img_type']) && $data['img_type'] == 1 ? 'active' : ''; ?>"><a data-toggle="tab" class="tab_li" href="#image_tab" data-value="img"><?= lang('image'); ?></a></li>
-								<li class="<?= isset($data['img_type']) && $data['img_type'] == 2 ? 'active' : ''; ?>"><a data-toggle="tab" href="#link_tab" class="tab_li" data-value="link"><?= !empty(lang('img_url')) ? lang('img_url') : "Image URL"; ?></a></li>
+								<li class="<?= !empty($data) ? "" : "active"; ?> <?= isset($data[0]['img_type']) && $data[0]['img_type'] == 1 ? 'active' : ''; ?>"><a data-toggle="tab" class="tab_li" href="#image_tab" data-value="img"><?= lang('image'); ?></a></li>
+								<li class="<?= isset($data[0]['img_type']) && $data[0]['img_type'] == 2 ? 'active' : ''; ?>"><a data-toggle="tab" href="#link_tab" class="tab_li" data-value="link"><?= !empty(lang('img_url')) ? lang('img_url') : "Image URL"; ?></a></li>
 							</ul>
 							<div class="tab-content pt-10">
-								<div id="image_tab" class="tab-pane <?= !empty($data) ? "" : "fade in active"; ?> <?= isset($data['img_type']) && $data['img_type'] == 1 ? 'fade in active' : ''; ?>">
+								<div id="image_tab" class="tab-pane <?= !empty($data) ? "" : "fade in active"; ?> <?= isset($data[0]['img_type']) && $data[0]['img_type'] == 1 ? 'fade in active' : ''; ?>">
 									<div class="imgTab">
 										<label class="defaultImg defultUpload">
 											<?php if (!isset($_GET['action'])) : ?>
-												<?php if (isset($data['id']) && !empty($data['id'])) : ?>
-													<a href="<?= base_url('admin/restaurant/delete_img/' . $data['id'] . '/items'); ?>" class="deleteImg <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
+												<?php if (isset($data[0]['id']) && !empty($data[0]['id'])) : ?>
+													<a href="<?= base_url('admin/restaurant/delete_img/' . $data[0]['id'] . '/items'); ?>" class="deleteImg <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
 												<?php endif; ?>
 											<?php endif; ?>
 
-											<img src="<?= isset($data['thumb']) && !empty($data['thumb']) ? base_url($data['thumb']) : "" ?>" alt="" class="imgPreview <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>">
+											<img src="<?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? base_url($data[0]['thumb']) : "" ?>" alt="" class="imgPreview <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "" : "opacity_0" ?>">
 
-											<div class="imgPreviewDiv  <?= isset($data['thumb']) && !empty($data['thumb']) ? "opacity_0" : "" ?>">
+											<div class="imgPreviewDiv  <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "opacity_0" : "" ?>">
 												<i class="fa fa-upload"></i>
 												<h4><?= lang('upload_image'); ?></h4>
 												<p class="fw_normal mt-3"><?= lang('max'); ?>: 1000 x 900 px</p>
@@ -325,16 +325,16 @@
 											<input type="file" name="file[]" class="imgFile opacity_0" data-width="1000" data-height="900">
 										</label>
 										<!-- open with cropper -->
-										<label class="defaultImg cropModalOpen <?= isset($data['thumb']) && !empty($data['thumb']) ? "opacity_0" : "" ?>">
+										<label class="defaultImg cropModalOpen <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "opacity_0" : "" ?>">
 											<?php if (!isset($_GET['action'])) : ?>
-												<?php if (isset($data['id']) && !empty($data['id'])) : ?>
-													<a href="<?= base_url('admin/restaurant/delete_img/' . $data['id'] . '/items'); ?>" class="deleteImg <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
+												<?php if (isset($data[0]['id']) && !empty($data[0]['id'])) : ?>
+													<a href="<?= base_url('admin/restaurant/delete_img/' . $data[0]['id'] . '/items'); ?>" class="deleteImg <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
 												<?php endif; ?>
 											<?php endif; ?>
 
-											<img src="<?= isset($data['thumb']) && !empty($data['thumb']) ? base_url($data['thumb']) : "" ?>" alt="" class="imgPreview imgPreviewCrop <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>">
+											<img src="<?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? base_url($data[0]['thumb']) : "" ?>" alt="" class="imgPreview imgPreviewCrop <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "" : "opacity_0" ?>">
 
-											<div class="imgPreviewDiv imgPreviewDivCrop <?= isset($data['thumb']) && !empty($data['thumb']) ? "opacity_0" : "" ?>">
+											<div class="imgPreviewDiv imgPreviewDivCrop <?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? "opacity_0" : "" ?>">
 												<i class="fa fa-crop"></i>
 												<h4><?= lang('upload_image'); ?></h4>
 												<p class="fw_normal mt-3"><?= lang('upload_by_cropper'); ?></p>
@@ -347,16 +347,16 @@
 									</div>
 									<span class="img_error"></span>
 								</div>
-								<div id="link_tab" class="tab-pane fade <?= isset($data['img_type']) && $data['img_type'] == 2 ? 'fade in active' : ''; ?>">
-									<?php if (!empty($data['img_url'])) : ?>
-										<img src="<?= $data['img_url']; ?>" alt="" class="urlimgPreview">
+								<div id="link_tab" class="tab-pane fade <?= isset($data[0]['img_type']) && $data[0]['img_type'] == 2 ? 'fade in active' : ''; ?>">
+									<?php if (!empty($data[0]['img_url'])) : ?>
+										<img src="<?= $data[0]['img_url']; ?>" alt="" class="urlimgPreview">
 									<?php endif; ?>
 									<div class="form-group">
 										<label><?= !empty(lang('img_url')) ? lang('img_url') : "Image URL"; ?></label>
-										<input type="text" name="img_url" class="form-control" value="<?= !empty($data['img_url']) ? $data['img_url'] : ""; ?>">
+										<input type="text" name="img_url" class="form-control" value="<?= !empty($data[0]['img_url']) ? $data[0]['img_url'] : ""; ?>">
 									</div>
 								</div>
-								<input type="hidden" name="img_type" class="img_type" value="<?= isset($data['img_type']) ? $data['img_type'] : 1; ?>">
+								<input type="hidden" name="img_type" class="img_type" value="<?= isset($data[0]['img_type']) ? $data[0]['img_type'] : 1; ?>">
 							</div><!-- Tab content -->
 
 
@@ -376,12 +376,12 @@
 
 					<?php if (isset($_GET['action']) && $_GET['action'] == "copy") : ?>
 						<input type="hidden" name="is_copy" value="1">
-						<input type="hidden" name="id" value="<?= isset($data['id']) && $data['id'] != 0 ? html_escape($data['id']) : 0 ?>">
-						<input type="hidden" name="images" value="<?= isset($data['images']) && !empty($data['images']) ? $data['images'] : "" ?>">
-						<input type="hidden" name="thumb" value="<?= isset($data['thumb']) && !empty($data['thumb']) ? $data['thumb'] : "" ?>">
+						<input type="hidden" name="id" value="<?= isset($data[0]['item_id']) && $data[0]['item_id'] != 0 ? html_escape($data[0]['item_id']) : 0 ?>">
+						<input type="hidden" name="images" value="<?= isset($data[0]['images']) && !empty($data[0]['images']) ? $data[0]['images'] : "" ?>">
+						<input type="hidden" name="thumb" value="<?= isset($data[0]['thumb']) && !empty($data[0]['thumb']) ? $data[0]['thumb'] : "" ?>">
 
 					<?php else : ?>
-						<input type="hidden" name="id" value="<?= isset($data['id']) && $data['id'] != 0 ? html_escape($data['id']) : 0 ?>">
+						<input type="hidden" name="id" value="<?= isset($data[0]['item_id']) && $data[0]['item_id'] != 0 ? html_escape($data[0]['item_id']) : 0 ?>">
 					<?php endif; ?>
 					<div class="pull-left">
 						<a href="<?= base_url('admin/menu/item'); ?>" class="btn btn-secondary btn-block btn-flat"><?= !empty(lang('cancel')) ? lang('cancel') : "cancel"; ?></a>
@@ -389,7 +389,7 @@
 
 
 
-					<?php if (isset($data['id']) && $data['id'] != 0) : ?>
+					<?php if (isset($data[0]['id']) && $data[0]['id'] != 0) : ?>
 						<div class="pull-right">
 
 							<button type="submit" name="register" class="btn btn-primary c_btn btn-flat"><?= !empty(lang('submit')) ? lang('submit') : "submit"; ?></button>
@@ -444,7 +444,7 @@
 		</div>
 	</div>
 
-	<?php if (isset($data['id']) && $data['id'] != 0) : ?>
+	<?php if (isset($data[0]['id']) && $data[0]['id'] != 0) : ?>
 		<?php if (!isset($_GET['action'])) : ?>
 			<div class="col-md-5">
 				<div class="box box-success">
@@ -456,12 +456,12 @@
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="extraImages">
-							<?php if (!empty($data['extra_images'])) : ?>
+							<?php if (!empty($data[0]['extra_images'])) : ?>
 								<?php $i = 1;
-								foreach (json_decode($data['extra_images'], true) as $key => $img) : ?>
+								foreach (json_decode($data[0]['extra_images'], true) as $key => $img) : ?>
 									<div class="singleEximg" id="hide_<?= $key;; ?>">
 										<img src="<?= base_url($img['thumb']); ?>" alt="">
-										<a href="<?= base_url('admin/menu/delete_extra_img/' . $data['id'] . '?img=' . $key); ?>" data-id="<?= $key; ?>" class="delete-img action_btn" data-msg="<?= lang('want_to_delete'); ?>"><i class="fa fa-trash"></i></a>
+										<a href="<?= base_url('admin/menu/delete_extra_img/' . $data[0]['id'] . '?img=' . $key); ?>" data-id="<?= $key; ?>" class="delete-img action_btn" data-msg="<?= lang('want_to_delete'); ?>"><i class="fa fa-trash"></i></a>
 									</div>
 								<?php $i++;
 								endforeach ?>
@@ -482,7 +482,7 @@
 
 
 
-<?php $dataPrice = !empty($data['price']) && isJson($data['price']) ? json_decode($data['price']) : ''; ?>
+<?php $dataPrice = !empty($data[0]['price']) && isJson($data[0]['price']) ? json_decode($data[0]['price']) : ''; ?>
 <!-- Modal -->
 <div id="variantModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
@@ -518,7 +518,7 @@
 
 <div id="addimgModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
-		<form action="<?= base_url('admin/menu/add_images/' . $data['id']) ?>" method="post" enctype="multipart/form-data">
+		<form action="<?= base_url('admin/menu/add_images/' . $data[0]['id']) ?>" method="post" enctype="multipart/form-data">
 			<!-- csrf token -->
 			<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 			<!-- Modal content-->

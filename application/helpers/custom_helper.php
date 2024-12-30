@@ -2085,6 +2085,29 @@ if (!function_exists('get_img')) {
         endif;
     }
 }
+// by MH
+if (!function_exists('get_cat_title')) {
+    function get_cat_title($catId)
+    {
+        $ci = &get_instance();
+        $lang = $ci->admin_m->get_languages_by_slug(get_lang());
+        
+        $data = $ci->admin_m->get_cat_name($catId,$lang['id']);
+        return $data->name;
+    }
+}
+
+// by MH
+if (!function_exists('get_item_title')) {
+    function get_item_title($itemId)
+    {
+        $ci = &get_instance();
+        $lang = $ci->admin_m->get_languages_by_slug(get_lang());
+        
+        $data = $ci->admin_m->get_item_name($itemId,$lang['id']);
+        return $data->title;
+    }
+}
 
 if (!function_exists('avatar')) {
     function avatar($img = '', $type = 'profile')

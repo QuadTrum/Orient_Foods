@@ -25,7 +25,7 @@
 </style>
 <div class="row">
     <div class="col-md-8 col-lg-7 ">
-        <?php $getAddons = $this->admin_m->get_my_addons($data['id'], restaurant()->id); ?>
+        <?php $getAddons = $this->admin_m->get_my_addons($data[0]['item_id'], restaurant()->id); ?>
         <div class="card">
             <div class="card-header space-between">
                 <?= !empty(lang('extras')) ? lang('extras') : "Extras"; ?> / <?= lang('addons'); ?>
@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="item_id" value="<?= isset($data['id']) && $data['id'] != 0 ? $data['id'] : 0; ?>">
+                        <input type="hidden" name="item_id" value="<?= isset($data[0]['item_id']) && $data[0]['item_id'] != 0 ? $data[0]['item_id'] : 0; ?>">
                         <button type="submit" class="btn btn-secondary"><?= lang('save'); ?></button>
                     </div>
                 </div>
@@ -337,7 +337,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="hidden" name="item_id" value="<?= isset($data['id']) && $data['id'] != 0 ? $data['id'] : 0; ?>">
+                            <input type="hidden" name="item_id" value="<?= isset($data[0]['item_id']) && $data[0]['item_id'] != 0 ? $data[0]['item_id'] : 0; ?>">
                             <input type="hidden" name="extra_title_id" value="<?= $row->id ?? 0; ?>">
                             <button type="submit" class="btn btn-secondary"><i class="fa fa-save"></i> <?= lang('save'); ?></button>
                         </div>

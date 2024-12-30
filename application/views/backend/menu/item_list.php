@@ -96,7 +96,7 @@
 											</div>
 										</td>
 										<td class="handle">
-											<?= html_escape($row['title']); ?>
+											<?= html_escape(get_item_title($row['item_id'])); ?>
 											<?php if ($row['veg_type'] == 1) : ?>
 												<label class="label" data-toggle="tooltip" title="<?= !empty(lang('veg')) ? lang('veg') : "veg"; ?>"><i class="fa fa-circle veg_type c_green"></i></label>
 											<?php elseif ($row['veg_type'] == 2) : ?>
@@ -194,9 +194,9 @@
 												<ul class="dropdown-menu dropdown-ul" role="menu">
 													<?php if (is_access('update') == 1) : ?>
 														<?php if ($multilang == 0) :
-															$edit = base_url("admin/menu/edit_item/{$row['id']}");
+															$edit = base_url("admin/menu/edit_item/{$row['item_id']}");
 														else :
-															$edit = base_url("admin/menu/edit_item/{$row['id']}?lang={$lang}");
+															$edit = base_url("admin/menu/edit_item/{$row['item_id']}?lang={$lang}");
 														endif; ?>
 
 														<li class="cl-info-soft"><a href="<?= $edit; ?>"><i class="fa fa-edit"></i> <?= !empty(lang('edit')) ? lang('edit') : "edit"; ?></a></li>
@@ -208,19 +208,19 @@
 														<?php endif; ?>
 													<?php endif; ?>
 													<?php if (is_access('delete') == 1) : ?>
-														<li class="cl-danger-soft"><a href="<?= base_url('delete-item/' . html_escape($row['id']) . '/items'); ?>" class=" action_btn" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-trash"></i> <?= !empty(lang('delete')) ? lang('delete') : "Delete"; ?></a></li>
+														<li class="cl-danger-soft"><a href="<?= base_url('delete-item/' . html_escape($row['item_id']) . '/items'); ?>" class=" action_btn" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-trash"></i> <?= !empty(lang('delete')) ? lang('delete') : "Delete"; ?></a></li>
 													<?php endif; ?>
 													<?php if (is_access('update') == 1) : ?>
 														<?php if ($multilang == 0) :
-															$clone_url = base_url("admin/menu/edit_item/{$row['id']}?action=copy");
+															$clone_url = base_url("admin/menu/edit_item/{$row['item_id']}?action=copy");
 														else :
-															$clone_url = base_url("admin/menu/edit_item/{$row['id']}?action=copy&lang={$lang}");
+															$clone_url = base_url("admin/menu/edit_item/{$row['item_id']}?action=copy&lang={$lang}");
 														endif; ?>
 														<li class="cl-warning-soft"><a href="<?= $clone_url; ?>"><i class="fa fa-clone"></i> <?= lang('clone_item'); ?></a></li>
 													<?php endif; ?>
 
 													<?php if (is_access('update') == 1 || is_access('add') == 1) : ?>
-														<li class="cl-warning-info"><a href="<?= base_url("admin/menu/addons/{$row['id']}"); ?>"><i class="icofont-library"></i> <?= lang('add_extra'); ?> / <?= lang("addons") ?></a></li>
+														<li class="cl-warning-info"><a href="<?= base_url("admin/menu/addons/{$row['item_id']}"); ?>"><i class="icofont-library"></i> <?= lang('add_extra'); ?> / <?= lang("addons") ?></a></li>
 													<?php endif; ?>
 												</ul>
 											</div>

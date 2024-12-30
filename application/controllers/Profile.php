@@ -129,7 +129,7 @@ class Profile extends MY_Controller
             $data['all_items'] = $this->admin_m->get_all_items_by_user($id, $packageItem_limit = 0, product_limit($id));
             $data['cat_list'] = $this->admin_m->get_my_menu_type($id, $packageItem_limit = 0);
         }
-
+        
         $data['main_content'] = $this->load->view(get_view_layouts_by_slug($slug) . '/single_menu', $data, true);
         $this->load->view(get_view_layouts_by_slug($slug) . '/index', $data);
     }
