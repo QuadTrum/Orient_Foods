@@ -2427,11 +2427,13 @@ Order area
 	{
 		is_test();
 		$img = single_select_by_id($id, $table);
+	
 		$data = [
 			'thumb' => '',
 			'images' => '',
 		];
 		$del = $this->admin_m->update($data, $id, $table);
+		
 		if ($del) :
 			delete_image_from_server($img['thumb']);
 			delete_image_from_server($img['images']);

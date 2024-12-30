@@ -18,9 +18,9 @@
             $params = $this->uri->rsegment(3);
             $lang = isset($_GET['lang']) ? $_GET['lang'] : site_lang();
             ?>
-            <?php if (isset($is_create) && $is_create == 0) : ?>
-                <?php include 'language_dropdown.php'; ?>
-            <?php endif; ?>
+            <?php //if (isset($is_create) && $is_create == 0) : ?>
+                <?php //include 'language_dropdown.php'; ?>
+            <?php //endif; ?>
 
             <?php $add_new_url = base_url("admin/menu/create_category/?lang={$lang}"); ?>
         <?php endif; ?>
@@ -69,30 +69,36 @@
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                         <div class="tab-content">
                             <?php $is_first = true; ?>
-                            <?php foreach ($languages as $lang): ?>
+                        <?php
+                      
+                        ?>
+                            <?php foreach ($languages as $key => $lang): ?>
                                 <div class="tab-pane <?= ($is_first || $lang['slug'] == $current_language) ? 'active' : ''; ?>" id="<?= $lang['slug']; ?>">
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <label for="name_<?= $lang['slug']; ?>"><?= !empty(lang('category_name')) ? lang('category_name') : "Category Name"; ?> <span class="error">*</span></label>
-                                            <input type="text" name="name[<?= $lang['slug']; ?>]" id="name_<?= $lang['slug']; ?>" class="form-control" placeholder="<?= !empty(lang('category_name')) ? lang('category_name') : "Category Name"; ?>" value="<?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['name']) : set_value('name[' . $lang['slug'] . ']'); ?>">
+                                            <input type="text" name="name[<?= $lang['slug']; ?>]" id="name_<?= $lang['slug']; ?>" class="form-control" placeholder="<?= !empty(lang('category_name')) ? lang('category_name') : "Category Name"; ?>" value="<?= (isset($data[$key]['language_id']) && $data[$key]['language_id'] == $lang['id']) ? html_escape($data[$key]['name']) : set_value('name[' . $lang['slug'] . ']'); ?>">
                                         </div>
                                         <div class="col-md-12 mb-10">
                                             <label for="details_<?= $lang['slug']; ?>"><?= !empty(lang('details')) ? lang('details') : "Details"; ?></label>
-                                            <textarea name="details[<?= $lang['slug']; ?>]" id="details_<?= $lang['slug']; ?>" cols="5" rows="5" class="form-control" placeholder=" <?= !empty(lang('details')) ? lang('details') : "Details"; ?>"><?= (isset($data['language_id']) && $data['language_id'] == $lang['id']) ? html_escape($data['details']) : set_value('details[' . $lang['slug'] . ']'); ?></textarea>
+                                            <textarea name="details[<?= $lang['slug']; ?>]" id="details_<?= $lang['slug']; ?>" cols="5" rows="5" class="form-control" placeholder=" <?= !empty(lang('details')) ? lang('details') : "Details"; ?>"><?= (isset($data[$key]['language_id']) && $data[$key]['language_id'] == $lang['id']) ? html_escape($data[$key]['details']) : set_value('details[' . $lang['slug'] . ']'); ?></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <?php $is_first = false; ?>
                             <?php endforeach; ?>
                         </div>
-          
+                        <?php
+                            $lastIndex = (is_array($data)) ? array_key_last($data):"";
+                           
+                            ?>
                         <!-- Hidden ID Field -->
                         <input type="hidden" name="default_language" id="default_language" value="<?= $languages[0]['slug']; ?>" />
                         <div class="row d-flex flex-column">
 
                             <div class="form-group col-md-6">
                                 <label for="title"><?= !empty(lang('order')) ? lang('order') : "order"; ?></label>
-                                <input type="text" name="orders" class="form-control" value="<?= !empty($data['orders']) ? html_escape($data['orders']) : 0; ?>">
+                                <input type="text" name="orders" class="form-control" value="<?= !empty($data[$lastIndex]['orders']) ? html_escape($data[$lastIndex]['orders']) : 0; ?>">
                             </div>
                             <?php
                             if (isset($data['language']) && $data['language']) {
@@ -120,15 +126,16 @@
 
                         </div>
                         <div class="row">
+                            
                             <div class="col-md-6">
                                 <label class="defaultImg square">
-                                    <?php if (isset($data['id']) && !empty($data['id'])) : ?>
-                                        <a href="<?= base_url('admin/restaurant/delete_img/' . $data['id'] . '/items'); ?>" class="deleteImg <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
+                                    <?php if (isset($data[$lastIndex]['id']) && !empty($data[$lastIndex]['id'])) : ?>
+                                        <a href="<?= base_url('admin/restaurant/delete_img/' . $data[$lastIndex]['id'] . '/menu_type'); ?>" class="deleteImg <?= isset($data[$lastIndex]['thumb']) && !empty($data[$lastIndex]['thumb']) ? "" : "opacity_0" ?>" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-close"></i></a>
                                     <?php endif; ?>
 
-                                    <img src="<?= isset($data['thumb']) && !empty($data['thumb']) ? base_url($data['thumb']) : "" ?>" alt="" class="imgPreview <?= isset($data['thumb']) && !empty($data['thumb']) ? "" : "opacity_0" ?>">
+                                    <img src="<?= isset($data[$lastIndex]['thumb']) && !empty($data[$lastIndex]['thumb']) ? base_url($data[$lastIndex]['thumb']) : "" ?>" alt="" class="imgPreview <?= isset($data[$lastIndex]['thumb']) && !empty($data[$lastIndex]['thumb']) ? "" : "opacity_0" ?>">
 
-                                    <div class="imgPreviewDiv <?= isset($data['thumb']) && !empty($data['thumb']) ? "opacity_0" : "" ?>">
+                                    <div class="imgPreviewDiv <?= isset($data[$lastIndex]['thumb']) && !empty($data[$lastIndex]['thumb']) ? "opacity_0" : "" ?>">
                                         <i class="fa fa-upload"></i>
                                         <h4><?= lang('upload_image'); ?></h4>
                                         <p class="fw_normal mt-3"><?= lang('max'); ?>: 500 x 500 px</p>
@@ -142,9 +149,9 @@
 
                     </div><!-- /.box-body -->
                     <div class="box-footer">
-
-                        <input type="hidden" name="id" value="<?= isset($data['id']) && $data['id'] != 0 ? html_escape($data['id']) : 0 ?>">
-                        <input type="hidden" name="default_cat_id" value="<?= isset($data['category_id']) && $data['category_id'] != 0 ? html_escape($data['category_id']) : 0 ?>">
+    
+                        <input type="hidden" name="id" value="<?= isset($data[0]['category_id']) && $data[0]['id'] != 0 ? html_escape($data[0]['category_id']) : 0 ?>">
+                        <input type="hidden" name="default_cat_id" value="<?= isset($data[0]['category_id']) && $data[0]['category_id'] != 0 ? html_escape($data[0]['category_id']) : 0 ?>">
                         <input type="hidden" name="is_clone" value="<?= isset($is_clone) && $is_clone == 1 ? 1 : 0 ?>">
                         <input type="hidden" name="is_edit" value="<?= isset($is_edit) && $is_edit == 1 ? 1 : 0 ?>">
                         <div class="pull-left">
@@ -187,6 +194,7 @@
                                 </thead>
                                 <tbody id="sortable" class="sortable sorting">
                                     <?php $i = 1;
+                                  
                                     foreach ($menu_type as $row) : ?>
                                         <tr id='<?= $row['id']; ?>'>
                                             <td class="handle"><?= $i; ?></td>
@@ -197,7 +205,7 @@
 
                                             </td>
                                             <td class="handle"><?= multi_lang(auth('id'), $row); ?></td>
-                                            <td class="handle"><?= html_escape($row['name']); ?></td>
+                                            <td class="handle"><?= html_escape(get_cat_title($row['category_id'])); ?></td>
 
 
                                             <td>
@@ -219,10 +227,10 @@
                                                     <ul class="dropdown-menu dropdown-ul" role="menu">
 
                                                         <?php if (is_access('update') == 1) : ?>
-                                                            <li class="cl-info-soft"><a href="<?= base_url('admin/menu/edit_category/' . html_escape($row['id']) . "?lang={$lang}"); ?>"><i class="fa fa-edit"></i> <?= !empty(lang('edit')) ? lang('edit') : "edit"; ?></a></li>
+                                                            <li class="cl-info-soft"><a href="<?= base_url('admin/menu/edit_category/' . html_escape($row['category_id']) . "?lang={$lang}"); ?>"><i class="fa fa-edit"></i> <?= !empty(lang('edit')) ? lang('edit') : "edit"; ?></a></li>
                                                         <?php endif; ?>
                                                         <?php if (is_access('delete') == 1) : ?>
-                                                            <li class="cl-danger-soft"><a href="<?= base_url('delete-item/' . html_escape($row['id']) . '/menu_type'); ?>" class=" action_btn" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-trash"></i> <?= !empty(lang('delete')) ? lang('delete') : "Delete"; ?></a></li>
+                                                            <li class="cl-danger-soft"><a href="<?= base_url('delete-item/' . html_escape($row['category_id']) . '/menu_type'); ?>" class=" action_btn" data-msg="<?= !empty(lang('want_to_delete')) ? lang('want_to_delete') : "want to delete"; ?>"><i class="fa fa-trash"></i> <?= !empty(lang('delete')) ? lang('delete') : "Delete"; ?></a></li>
                                                         <?php endif; ?>
 
 

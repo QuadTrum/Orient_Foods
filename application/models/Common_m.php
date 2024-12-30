@@ -766,6 +766,19 @@ class Common_m extends CI_Model
 		$query = $query->row();
 		return $query;
 	}
+	// by MH
+	public function get_single_new_items($id)
+	{
+		$this->db->select('i.*,i.id as item_id,a.name as allergen');
+		$this->db->from('items i');
+		$this->db->join('allergens a', 'a.id = i.allergen_id', 'LEFT');
+		$this->db->where('i.item_id', $id);
+		$this->db->where('i.status', 1);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$query = $query->row();
+		return $query;
+	}
 
 	public function get_single_package_specilities($id)
 	{
@@ -1841,6 +1854,7 @@ class Common_m extends CI_Model
 		$this->db->order_by('mt.orders', "ASC");
 		$query = $this->db->get();
 		$query = $query->result_array();
+		
 		foreach ($query as $key => $value) {
 			$this->db->select('i.*');
 			$this->db->from('items i');

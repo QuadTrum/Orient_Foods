@@ -52,16 +52,16 @@
 				<div class="row">
 					<?php foreach ($menu_type as $key => $cat): ?>
 						<div class="col-md-3 <?= multi_lang(auth('id'),$cat);?>">
-							<a href="<?= base_url("admin/menu/item_list/".multi_lang(auth('id'),$cat)."?lang={$lang}"); ?>">
+							<a href="<?= base_url("admin/menu/item_list/".multi_lang(auth('category_id'),$cat)."?lang={$lang}"); ?>">
 								<div class="single_cat">
 									<img src="<?= get_img($cat['thumb'],'',1) ;?>" alt="">
 									<div class="catDetails">
-										<h4><?= $cat['name'] ;?></h4>
+										<h4><?= get_cat_title($cat['category_id']) ;?></h4>
 										
 										<div class="mt-10">
 											<label class="label default-light-soft-active fz-14">
 												<?php if(isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang==1): ?>
-													<?= $this->admin_m->get_total_item_by_cat_id_ln(multi_lang(auth('id'),$cat),$lang) ;?>
+													<?= $this->admin_m->get_total_item_by_cat_id_ln(multi_lang(auth('category_id'),$cat),$lang) ;?>
 												<?php else: ?>
 													<?= $this->admin_m->get_total_item_by_cat_id($cat['id']) ;?>
 												<?php endif; ?>
