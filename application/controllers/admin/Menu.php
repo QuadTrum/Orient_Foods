@@ -88,6 +88,11 @@ class Menu extends MY_Controller
 		$data['languages'] = $this->admin_m->select('languages');
 		$data['data_type'] = false;
 		$data['data'] = $this->admin_m->single_select_items_by_auth_id($id, 'items');
+		if (!empty($data['data'])) {
+			usort($data['data'], function ($a, $b) {
+				return $a['language_id'] <=> $b['language_id']; // Ensure language_id exists and is comparable
+			});
+		}
 		$data['allergens'] = $this->admin_m->select_all_by_user_ln('allergens');
 		$data['extras'] = $this->admin_m->get_extras($id, restaurant()->id);
 		$data['extras_libraries'] = $this->admin_m->select_all_by_shop(restaurant()->id, 'extra_libraries');
@@ -436,6 +441,13 @@ class Menu extends MY_Controller
 		$data['languages'] = $this->admin_m->select('languages');
 		$data['page'] = "Menu";
 		$data['data'] = $this->admin_m->single_select_by_auth_id($id, 'menu_type');
+
+		if (!empty($data['data'])) {
+			usort($data['data'], function ($a, $b) {
+				return $a['language_id'] <=> $b['language_id']; // Ensure language_id exists and is comparable
+			});
+		}
+
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
 		else :
