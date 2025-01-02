@@ -447,7 +447,7 @@ class Menu extends MY_Controller
 				return $a['language_id'] <=> $b['language_id']; // Ensure language_id exists and is comparable
 			});
 		}
-
+// var_dump($data['data']).die();
 		if (isset(restaurant()->is_multi_lang) && restaurant()->is_multi_lang == 1) :
 			$data['menu_type'] = $this->admin_m->get_my_categories_ln(restaurant()->id, $_GET['lang'] ?? site_lang());
 		else :

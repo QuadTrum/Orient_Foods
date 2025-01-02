@@ -164,7 +164,7 @@
         }
 
         body.dark-mode .form-control {
-            background-color: #3333 !important;
+            background-color: #333 !important;
             color: #fff !important;
         }
 
@@ -234,6 +234,39 @@
             padding: 7px;
             border-radius: 100%;
             transition: 0.5s all ease-in-out;
+        }
+        /* checkout page and notifications */
+        body.dark-mode .cartNofify,
+        body.dark-mode .cart_heading,
+        body.dark-mode .shopping_cart,
+        body.dark-mode .shopping_cart_content ul li,
+        body.dark-mode .cart_footer,
+        body.dark-mode .order_page,
+        body.dark-mode .singlePage.style_2 ul li
+        {
+            background-color: #333;
+        }
+        body.dark-mode .single_cart_item_details h4,
+        body.dark-mode .search-txt-2,
+        body.dark-mode .defaultHeading,
+        body.dark-mode .user_login_header .heading
+        {
+            color: #fff;
+        }
+        /* modal header */
+        body.dark-mode .modal-content,
+        body.dark-mode .modal-header
+        {
+            background-color: #333 !important;
+            color: #fff !important
+        }
+        /* restaurant styling */
+        body.dark-mode #restaurant-name,
+        body.dark-mode .mobileLang,
+        body.dark-mode .navCart a i,
+        body.dark-mode .menuToggle i
+        {
+            color: #fff;
         }
     </style>
 
