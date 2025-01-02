@@ -26,3 +26,4 @@ Thumbs.db
 # database file
 application/config/database.php
 application/.htaccess
+application/config/database.php
