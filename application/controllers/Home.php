@@ -11,6 +11,24 @@ class Home extends MY_Controller
 
 	public function index()
 	{
+		$siteLang = get_mh_session();
+		$ci = &get_instance();
+		$site_Lang = "home_page_lang";
+		$sessionData  = $ci->session->userdata($site_Lang);
+		$currentController = $ci->router->class;
+		$homeCtrls = ['home', 'login'];
+		if (empty($sessionData)) {
+			if (in_array($currentController, $homeCtrls)) {
+				$siteLang = "home_page_lang";
+				$ci->session->set_userdata($siteLang, 'english');
+				if (isset($siteLang)) {
+                    header("Refresh:0");
+                }
+				return $siteLang;
+			} else {
+				return null;
+			}
+		} 
 		if (isset($this->settings['is_landing_page']) && $this->settings['is_landing_page'] == 1) {
 			redirect(prep_url($this->settings['landing_page_url']));
 			exit();
@@ -385,14 +403,14 @@ class Home extends MY_Controller
 	}
 
 
-	public function lang_switch($lang,$page="home_page_lang")
+	public function lang_switch($lang, $page = "home_page_lang")
 	{
 		// var_dump($lang).die();
 		//$this->session->set_userdata('site_lang', $lang);
 		// By MH
 		$this->session->set_userdata($page, $lang);
 		// var_dump($this->session->get_userdata()).die();
-		$ci =& get_instance();
+		$ci = &get_instance();
 		// $currentController = $ci->router->class;
 		// echo $currentController;exit;
 		// $homeCtrls       = ['home','login'];
