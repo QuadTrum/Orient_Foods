@@ -951,6 +951,10 @@ i.phone {
     border-right: 0;
     position: relative;
 }
+.navLeftMenu a.navbar-brand{
+    position: relative;
+    right: 20rem;
+}
 
 @media (min-width: 678px) and (max-width: 1000px) {
     .iti__country-list {
@@ -1003,8 +1007,9 @@ i.phone {
     .navbar-brand img {
         position: relative;
         left: 48px;
-        height: 100px !important;
+        max-height: max-content;
     }
+
 
     .customMenu ul {
         display: none !important;
@@ -1058,6 +1063,11 @@ i.phone {
         padding: 8px 10px !important;
     }
 
+    .navLeftMenu a.navbar-brand{
+        position: relative;
+        right: 50px !important;
+    }
+
 
 }
 
@@ -1103,8 +1113,4 @@ i.phone {
 .bannerTextArea {
     text-align: right !important;
     display: block;
-}
-.navLeftMenu a.navbar-brand{
-    position: relative;
-    right: 20rem;
 }

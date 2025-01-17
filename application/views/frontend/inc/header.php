@@ -219,6 +219,10 @@
             border-radius: 100%;
             transition: 0.5s all ease-in-out;
         }
+        body.light-mode .left_footer p a 
+        {
+            color: #fff;
+        }
 
         /* dark mode button  */
         #darkModeButton {
@@ -476,6 +480,6 @@
 
         <div class="mainWrapper">
             <div class="toggleTheme">
-                <button id="lightModeButton" onclick="toggleDarkMode()"><i class="far fa-sun" style="color:orange;font-size:1.5em;"></i></button>
+                <button id="lightModeButton" onclick="toggleDarkMode()"><i class="far fa-sun" style="color:#<?= $settings['site_color']; ?>;font-size:1.5em;"></i></button>
                 <button id="darkModeButton" onclick="toggleDarkMode()" style="display:none;"><i class="fas fa-moon" style="color:dark;font-size:1.5em;transform: rotate(240deg);"></i></button>
             </div>

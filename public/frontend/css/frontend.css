@@ -2695,6 +2695,7 @@ pre.pre-code {
     flex-direction: column;
   }
 
+
   .topSectionImg {
     max-width: 100%;
     display: flex;
@@ -2799,7 +2800,7 @@ pre.pre-code {
   .navbar-brand img {
     position: relative;
     left: 0px;
-    height: 100px !important;
+    max-height: max-content;
   }
 }
 

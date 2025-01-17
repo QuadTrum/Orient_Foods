@@ -113,7 +113,7 @@ $restaurant_color = isset($u_info['colors']) ? $u_info['colors'] : '';
 
         .topHeader {
             justify-content: flex-end;
-            height: 20%;
+            height: 40%;
             box-shadow: 0 0 0px #eee;
         }
 

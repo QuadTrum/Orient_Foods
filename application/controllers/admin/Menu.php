@@ -110,6 +110,28 @@ class Menu extends MY_Controller
 		$this->load->view('backend/index', $data);
 	}
 
+	// item price direct update from item list 
+	public function itemPriceUpdate(){
+		// var_dump('hello').die();
+		$itemId = $this->input->post('itemId');
+		$content = $this->input->post('content');
+		// var_dump($content).die();
+		// Validate input
+		if (!$itemId || !$content) {
+			echo json_encode(['success' => false, 'message' => 'Invalid input']);
+			return;
+		}
+	
+		// Update the database (replace 'items' with your actual table)
+		$this->db->where('item_id', $itemId);
+		$updated = $this->db->update('items', ['price' => $content]);
+	
+		if ($updated) {
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Update failed']);
+		}
+	}
 	/**
 	 *** add items
 	 **/

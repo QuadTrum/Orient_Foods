@@ -55,12 +55,12 @@
   <div class="homeTopBanner"  id="contacts">
     <div class="container mt-5">
       <div class="row mt-3">
-        <div class="col-5 mt-5">
+        <div class="col-5 mt-5 topSectionImg">
           <div class="homeLeftImg">
             <img src="<?= base_url('uploads/site_banners/flyerImage.png')  ?>" alt="home banner">
           </div>
         </div>
-        <div class="col-7 mt-5">
+        <div class="col-7 mt-5 topSectionText">
           <div class="bannerTextArea text-center">
             <h1 class="bannerTitle"><?= html_escape($contacts['heading']); ?><span> <?= html_escape($settings['site_name']); ?></span></h1>
             <p class="bannerHeadline mt-3"><?= html_escape($contacts['sub_heading']); ?></p>

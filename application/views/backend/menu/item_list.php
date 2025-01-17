@@ -112,9 +112,10 @@
 											<?php endif; ?>
 
 										</td>
-										<td>
+										<td class="editableColumn">
 											<?php if ($row['is_size'] == 0) : ?>
 												<?= __price($row, restaurant()->id); ?>
+												<input id="itemIdPrice" value="<?= html_escape($row['item_id'])?>" hidden>
 											<?php else : ?>
 												<?php
 												$price = json_decode($row['price']); ?>
@@ -306,3 +307,59 @@
 
 	</div>
 </div>
+<script>
+
+	var csrfHash = '<?= $this->security->get_csrf_hash(); ?>';
+	document.querySelectorAll('.editableColumn').forEach(function (element) {
+	// Enable contenteditable on mouseenter
+	element.addEventListener('dblclick', function () {
+		element.setAttribute('contenteditable', 'true');
+		element.focus();
+
+		// Fetch associated input value if exists
+		const inputElement = element.querySelector('input');
+		const itemId = inputElement ? inputElement.value : null;
+		console.log('Mouse entered. Item ID:', itemId);
+	});
+
+	// Disable contenteditable and send AJAX on blur (when editing ends)
+	element.addEventListener('blur', function () {
+		element.setAttribute('contenteditable', 'false'); // Disable editing
+		const updatedContent = element.innerText.trim(); 
+		const inputElement = element.querySelector('input');
+		const itemId = inputElement ? inputElement.value : null; 
+		if (itemId  && updatedContent) {
+			// console.log(itemId,updatedContent);
+			// Send the updated content via AJAX
+			$.ajax({
+				url: '<?= site_url('admin/menu/itemPriceUpdate') ?>',
+				type: 'POST',
+				dataType: "json",
+				data: {
+					'itemId': itemId,       // Item id aganist price update
+					'content': updatedContent, // Updated Data
+					'csrf_test_name': csrfHash 
+				},
+				success: function (response) {
+					confirm(`Content updated successfully`,response);
+					// console.log('Content updated successfully:', response);
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating content:', error);
+				}
+			});
+		} else {
+			console.warn('Invalid data. Update not sent.');
+		}
+	});
+
+	// Disable contenteditable on mouseleave (if user didn't interact)
+	element.addEventListener('mouseleave', function () {
+		if (!element.contains(document.activeElement)) {
+			element.setAttribute('contenteditable', 'false');
+			console.log('Mouse left. Content editing disabled.');
+		}
+	});
+});
+
+</script>

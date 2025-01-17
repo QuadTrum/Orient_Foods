@@ -2453,4 +2453,12 @@ p.currencyTag {
         right: 2px !important;
         transition: all .3s ease-in-out;
     }
+        
+}
+
+@media only screen and (max-width: 767px) {
+    .restaurantName {
+        position: relative !important;
+        left: 78px !important;
+    }
 }
